@@ -1,0 +1,7 @@
+# Chats y audios privados (contienen números y conversaciones de terceros)
+docs/referencia/chats/
+docs/referencia/audios/
+.env
+node_modules/
+__pycache__/
+.DS_Store
