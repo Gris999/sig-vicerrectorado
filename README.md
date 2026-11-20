@@ -20,3 +20,14 @@ PostgreSQL + PostGIS · API REST (GeoJSON, EPSG:4326) · Leaflet · Docker Compo
 - `db/` — scripts SQL (esquema, datos)
 - `api/` — backend
 - `web/` — frontend
+
+## Cómo ejecutarlo
+Requiere Docker Desktop.
+```bash
+docker compose up -d --build
+```
+- App: http://localhost:8042
+- Documentación de la API (Swagger): http://localhost:8042/docs
+- PostGIS: `localhost:5442` (usuario/clave/base: `sig`)
+
+Para reiniciar la base desde cero (vuelve a cargar `db/*.sql`): `docker compose down -v && docker compose up -d --build`.

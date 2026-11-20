@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: sig
+      POSTGRES_PASSWORD: sig
+      POSTGRES_DB: sig
+    ports: ["5442:5432"]
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sig -d sig"]
+      interval: 3s
+      retries: 20
+  api:
+    build: { context: ., dockerfile: api/Dockerfile }
+    environment:
+      DATABASE_URL: postgresql://sig:sig@db:5432/sig
+    ports: ["8042:8000"]
+    depends_on:
+      db: { condition: service_healthy }
+volumes:
+  pgdata:

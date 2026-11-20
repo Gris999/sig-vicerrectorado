@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vicerrectorado UAGRM · Mapa</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+  <h1>Oficinas del Vicerrectorado · UAGRM</h1>
+  <form id="buscar"><input id="texto" type="search" placeholder="Buscar oficina o trámite (ej. título, kardex)" aria-label="Buscar"><button>Buscar</button></form>
+</header>
+<main>
+  <aside id="panel">
+    <div class="acciones">
+      <button id="btn-cercana" type="button">📍 Oficina más cercana</button>
+      <label>Radio <input id="radio-m" type="number" value="300" min="10" step="50"> m <button id="btn-radio" type="button">Buscar en radio</button></label>
+      <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las dependencias</option></select>
+      <a href="/api/infraestructura.csv" class="link">⬇ Tabla de infraestructura (CSV)</a>
+    </div>
+    <div id="resultado"><p class="ayuda">Haz clic en una oficina o edificio del mapa, o usa el buscador.</p></div>
+  </aside>
+  <div id="mapa"></div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
