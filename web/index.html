@@ -5,26 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vicerrectorado UAGRM · Mapa</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="/static/styles.css?v=0.2.1">
 </head>
 <body>
 <header>
-  <h1>Oficinas del Vicerrectorado · UAGRM</h1>
-  <form id="buscar"><input id="texto" type="search" placeholder="Buscar oficina o trámite (ej. título, kardex)" aria-label="Buscar"><button>Buscar</button></form>
+  <div class="titulo">
+    <h1>Oficinas Administrativas del Vicerrectorado (1)</h1>
+    <p>UAGRM · Ciudad Universitaria · SIG INF442-SA · Grupo 16</p>
+  </div>
+  <form id="buscar" role="search">
+    <input id="texto" type="search" placeholder="¿Qué buscas? (ej. título, kardex, becas, PSA)" aria-label="Buscar oficina o trámite">
+    <button>Buscar</button>
+  </form>
 </header>
 <main>
   <aside id="panel">
-    <div class="acciones">
-      <button id="btn-cercana" type="button">📍 Oficina más cercana</button>
-      <label>Radio <input id="radio-m" type="number" value="300" min="10" step="50"> m <button id="btn-radio" type="button">Buscar en radio</button></label>
-      <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las dependencias</option></select>
-      <a href="/api/infraestructura.csv" class="link">⬇ Tabla de infraestructura (CSV)</a>
-    </div>
-    <div id="resultado"><p class="ayuda">Haz clic en una oficina o edificio del mapa, o usa el buscador.</p></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab activo" data-tab="consultar" role="tab">Consultar</button>
+      <button class="tab" data-tab="tabla" role="tab">Tabla</button>
+      <button class="tab" data-tab="editar" role="tab">Editar</button>
+    </nav>
+
+    <section id="tab-consultar" class="contenido">
+      <div class="grupo">
+        <h2>Consultas espaciales</h2>
+        <button id="btn-cercana" type="button">📍 Oficina más cercana a mí</button>
+        <div class="fila"><label for="radio-m">¿Qué hay a menos de</label><input id="radio-m" type="number" value="200" min="10" step="50"><span>m?</span><button id="btn-radio" type="button">Ver</button></div>
+        <div class="fila"><label for="dist-a">Distancia entre</label><select id="dist-a"></select><select id="dist-b"></select><button id="btn-dist" type="button">Medir</button></div>
+        <p class="ayuda">Clic en un <b>edificio, cancha o jardín</b> = qué contiene. Clic en una <b>oficina</b> = su ficha y el extintor, entrada y baño más cercanos.</p>
+      </div>
+      <div class="grupo">
+        <h2>Consultas alfanuméricas</h2>
+        <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las dependencias</option></select>
+        <select id="filtro-clas" aria-label="Filtrar por clasificación"><option value="">Todas las clasificaciones</option></select>
+      </div>
+      <div id="resultado"></div>
+    </section>
+
+    <section id="tab-tabla" class="contenido" hidden>
+      <h2>Tabla de infraestructura</h2>
+      <div id="resumen"></div>
+      <h3>Oficinas del Vicerrectorado (1)</h3>
+      <div id="tabla-oficinas" class="tabla-scroll"></div>
+      <h3>Descargas</h3>
+      <p class="descargas">CSV:
+        <a href="/api/infraestructura.csv?tabla=oficinas">oficinas</a> ·
+        <a href="/api/infraestructura.csv?tabla=edificios">edificios</a> ·
+        <a href="/api/infraestructura.csv?tabla=zonas">zonas</a> ·
+        <a href="/api/infraestructura.csv?tabla=vias">vías</a> ·
+        <a href="/api/infraestructura.csv?tabla=puntos">puntos</a><br>
+        GeoJSON (WGS 84):
+        <a href="/api/export/oficinas.geojson" download>oficinas</a> ·
+        <a href="/api/export/edificios.geojson" download>edificios</a> ·
+        <a href="/api/export/zonas.geojson" download>zonas</a> ·
+        <a href="/api/export/vias.geojson" download>vías</a> ·
+        <a href="/api/export/puntos.geojson" download>puntos</a></p>
+      <button id="btn-imprimir" type="button">🖨 Imprimir plano digital (PDF)</button>
+    </section>
+
+    <section id="tab-editar" class="contenido" hidden>
+      <h2>Digitalización y edición de atributos</h2>
+      <div id="login">
+        <label for="token">Token de edición</label>
+        <div class="fila"><input id="token" type="password" autocomplete="off"><button id="btn-login" type="button">Entrar</button></div>
+        <p class="ayuda">Solo para el equipo. El token está en el archivo <code>.env</code> del proyecto.</p>
+      </div>
+      <div id="editor" hidden>
+        <h3>Digitalizar un punto</h3>
+        <div class="fila">
+          <select id="dig-tipo">
+            <option value="oficina">Oficina del Vicerrectorado</option>
+            <option value="extintor">Extintor</option>
+            <option value="entrada">Entrada</option>
+            <option value="servicio">Servicio</option>
+          </select>
+          <button id="btn-digitalizar" type="button">✚ Clic en el mapa</button>
+        </div>
+        <div id="dig-form"></div>
+        <h3>Editar atributos</h3>
+        <p class="ayuda">Haz clic en una oficina del mapa para editar su ficha.</p>
+        <form id="edit-form" hidden></form>
+      </div>
+    </section>
   </aside>
-  <div id="mapa"></div>
+  <div id="mapa" aria-label="Mapa"></div>
 </main>
+
+<!-- Plano para imprimir -->
+<div id="plano-print" aria-hidden="true">
+  <div class="cajetin">
+    <b>PLANO DIGITAL · OFICINAS ADMINISTRATIVAS DEL VICERRECTORADO (1)</b><br>
+    Universidad Autónoma Gabriel René Moreno · Santa Cruz de la Sierra<br>
+    Sistema de referencia: WGS 84 (EPSG:4326) · Datos base: © OpenStreetMap contributors · <span id="fecha-plano"></span><br>
+    SIG INF442-SA 2-2026 · Grupo 16: Alaca P., Corrales B., Fernandez J., Otsubo C. (líder), Quenta Y.
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js"></script>
+<script src="/static/app.js?v=0.2.1"></script>
 </body>
 </html>

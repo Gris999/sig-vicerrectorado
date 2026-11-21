@@ -17,6 +17,7 @@ services:
     build: { context: ., dockerfile: api/Dockerfile }
     environment:
       DATABASE_URL: postgresql://sig:sig@db:5432/sig
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?Define ADMIN_TOKEN en .env (ver .env.example)}
     ports: ["8042:8000"]
     depends_on:
       db: { condition: service_healthy }
