@@ -26,11 +26,10 @@
 | 10 | Capa en **shapefile** para ArcMap ("armar la base para ArcMap… el .shp… lo quiere funcional") | Chat del grupo 26/10 | ✅ Exportación .shp/.dbf/.prj (WGS 84) |
 | 11 | Mismo stack/formato entre grupos para integrar | Clase | ✅ GeoJSON + SHP |
 | 12 | Datos con GPS y sobreponer a una base de referencia | Chat del curso 4/11 | ⚠️ Digitalización sobre OSM; falta la base del docente si existe |
-| 13 | Usar los archivos de la plataforma (Moodle) | Chat del grupo 16/9 | ❓ No los tenemos |
+| 13 | Usar los archivos de la plataforma (Moodle) | Chat del grupo 16/9 | ✅ El único archivo del proyecto es el enunciado (22 temas), confirmado por el grupo |
 | 14 | Opcional: sedes de provincia / El Vallecito | Clase | ➖ Fuera de alcance salvo que haya oficinas VR allí |
 | 15 | Defensa: cada integrante expone una parte | Audio 3/11 | ⏳ Pendiente (sprint 4) |
 
 ## Material que falta y podría ser importante
-- Archivos del proyecto en la **plataforma Moodle** de la materia.
 - **Audios del docente** del 14/9 y 9/10 y el audio de Yohan del 23/10: el chat exportado dice "audio omitido".
 - **Los últimos minutos de la clase del 23/10**: TurboScribe cortó a los 30 minutos (falta el sorteo de los grupos 14 a 22).
