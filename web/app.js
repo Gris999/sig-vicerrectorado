@@ -9,6 +9,7 @@ const SIM = {
   edificio: { ADMINISTRATIVO: ['#f5b041', 'Edificio administrativo (con oficinas VR)'], SERVICIO: ['#76d7c4', 'Edificio de servicio'], ACADEMICO: ['#d5d8dc', 'Edificio académico / otro'] },
   zona:     { campus: ['#1d4f91', 'Límite del campus'], cancha: ['#58d68d', 'Cancha'], jardin: ['#a9dfbf', 'Jardín / área verde'], parqueo: ['#d6dbdf', 'Parqueo'] },
 };
+const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección)( General)? de /, '').replace(/ \(.*\)$/, '').split(',')[0].slice(0, 24);
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
 
 // ---------------------------------------------------------------- mapa base
@@ -49,7 +50,7 @@ const capas = {
   }),
   oficinas: L.geoJSON(null, {
     pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 10, color: '#fff', weight: 2.5, fillColor: color('oficina', f.properties.clasificacion), fillOpacity: 1 }),
-    onEachFeature: (f, l) => { l.bindTooltip(f.properties.sigla || f.properties.nombre, { permanent: true, direction: 'right', className: 'lbl' }); l.on('click', () => verOficina(f.properties.id)); },
+    onEachFeature: (f, l) => { l.bindTooltip(etiqueta(f.properties), { permanent: true, direction: 'right', className: 'lbl' }); l.on('click', () => verOficina(f.properties.id)); },
   }),
 };
 const resaltado = L.layerGroup().addTo(mapa);
