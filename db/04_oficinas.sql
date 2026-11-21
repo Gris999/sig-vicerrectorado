@@ -63,9 +63,23 @@ INSERT INTO oficina (codigo,nombre,sigla,clasificacion,funcion,tramites,dependen
   'https://www.uagrm.edu.bo/unidades-administrativas/dicit', ST_SetSRID(ST_MakePoint(-63.1908557,-17.7761731),4326)),
  ('VR1-012','Departamento de Orientación Vocacional',NULL,'ATENCION',
   'Orientación vocacional a postulantes y estudiantes.',
-  'Test vocacional; orientación sobre carreras',
-  12,NULL,NULL,NULL,25,'Google Maps (fuera de la Ciudad Universitaria, por verificar)',
-  'https://www.uagrm.edu.bo/unidades-administrativas/vicerrectorado', ST_SetSRID(ST_MakePoint(-63.1654578,-17.7777863),4326));
+  'Test vocacional (en línea, con pago previo; resultados en persona); orientación sobre carreras',
+  12,NULL,NULL,'68904037',15,'Google Maps + dirección oficial (Av. Santa Cruz #162, entre Santiago y Charcas, 2.º piso)',
+  'https://www.uagrm.edu.bo/unidades-administrativas/orientacin-vocacional', ST_SetSRID(ST_MakePoint(-63.1654578,-17.7777863),4326)),
+ ('VR1-003','Dirección General de Posgrado','DGP','DIRECCION',
+  'Planifica, coordina, supervisa y evalúa el Sistema de Posgrado de la UAGRM (18 unidades de posgrado facultativas).',
+  'Coordinación académica y científica de posgrado; reglamentos; revalidación de títulos de posgrado',
+  3,'Ph.D. Rolando López Cabezas','Director General de Posgrado',NULL,10,'Enlace de mapa oficial (Av. Irala N.º 565, 5.º piso)',
+  'https://www.uagrm.edu.bo/unidades-administrativas/dgp', ST_SetSRID(ST_MakePoint(-63.181935,-17.792683),4326)),
+ ('VR1-013','Oficina de Certificaciones de Posgrado','DGP','ATENCION',
+  'Emisión de certificados académicos de posgrado.',
+  'Certificado de notas; certificado de vencimiento de plan de estudios',
+  3,NULL,NULL,NULL,10,'Enlace de mapa oficial (Campus Universitario, Pabellón 126, Aula 4)',
+  'https://www.uagrm.edu.bo/unidades-administrativas/dgp', ST_SetSRID(ST_MakePoint(-63.191062,-17.778009),4326));
+
+UPDATE oficina SET email='orientacion@uagrm.edu.bo', piso='2.º piso' WHERE codigo='VR1-012';
+UPDATE oficina SET horario='Lunes a viernes, 8:30 a 15:30 (continuo)', piso='5.º piso' WHERE codigo='VR1-003';
+UPDATE oficina SET horario='Lunes a viernes, 8:30 a 15:30 (continuo)', piso='Aula 4' WHERE codigo='VR1-013';
 
 -- Registro y Trámites figura en Google Maps junto con Títulos en el mismo departamento (~30 m del punto OSM).
 UPDATE oficina SET nombre='Registro y Trámites (Departamento de Trámite, Registro y Títulos)' WHERE codigo='VR1-009';
