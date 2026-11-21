@@ -8,6 +8,8 @@ const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   { maxZoom: 20, attribution: 'Imágenes © Esri' });
 L.control.scale({ imperial: false }).addTo(mapa);
+window.addEventListener('load', () => mapa.invalidateSize());
+window.addEventListener('resize', () => mapa.invalidateSize());
 
 const capaEdificios = L.geoJSON(null, {
   style: f => ({ color: '#555', weight: 1, fillColor: f.properties.nro_oficinas ? '#f5b041' : '#bdc3c7', fillOpacity: f.properties.nro_oficinas ? .6 : .3 }),
@@ -100,6 +102,8 @@ document.getElementById('filtro-dep').onchange = async e => {
   const [ed, of, deps] = await Promise.all([api('/api/edificios'), api('/api/oficinas'), api('/api/dependencias')]);
   capaEdificios.addData(ed);
   capaOficinas.addData(of);
+  mapa.invalidateSize();
+  if (capaEdificios.getLayers().length) mapa.fitBounds(capaEdificios.getBounds(), { padding: [20, 20] });
   const sel = document.getElementById('filtro-dep');
   deps.forEach(d => sel.add(new Option('—'.repeat(d.nivel) + ' ' + d.nombre + (d.sigla ? ` (${d.sigla})` : ''), d.id)));
 })();
