@@ -12,10 +12,12 @@ from typing import Literal
 
 import psycopg
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from psycopg.rows import dict_row
 from pydantic import BaseModel, Field
+
+from api.shapefile_export import a_zip
 
 DSN = os.getenv("DATABASE_URL", "postgresql://sig:sig@localhost:5432/sig")
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
@@ -230,6 +232,16 @@ def infraestructura_csv(tabla: Literal["oficinas", "edificios", "zonas", "vias",
 @app.get("/api/export/{tabla}.geojson", tags=["Intercambio"], summary="Exportar una capa en GeoJSON (RFC 7946)")
 def exportar(tabla: Literal["oficinas", "edificios", "zonas", "vias", "puntos"]):
     return {"oficinas": oficinas, "edificios": edificios, "zonas": zonas, "vias": vias, "puntos": puntos}[tabla]()
+
+
+CAPAS_SHP = {"oficinas": "VR1_oficinas", "edificios": "VR1_edificios", "zonas": "VR1_zonas", "vias": "VR1_vias", "puntos": "VR1_puntos"}
+
+
+@app.get("/api/export/{tabla}.zip", tags=["Intercambio"], summary="Exportar una capa en Shapefile (.shp/.dbf/.prj) para ArcMap")
+def exportar_shp(tabla: Literal["oficinas", "edificios", "zonas", "vias", "puntos"]):
+    nombre = CAPAS_SHP[tabla]
+    return Response(a_zip(nombre, exportar(tabla)), media_type="application/zip",
+                    headers={"Content-Disposition": f"attachment; filename={nombre}.zip"})
 
 
 # ----------------------------------------------------------------------------- digitalización y edición de atributos
