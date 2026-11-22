@@ -114,8 +114,8 @@ $('buscar').addEventListener('submit', cerrarSugerencias);
 function verPunto(f) {
   const p = f.properties, [lat, lon] = ll(f);
   const tipo = p.tipo === 'servicio' ? 'Servicio del campus' : p.tipo === 'entrada' ? 'Acceso' : 'Seguridad';
-  mostrar(`<article class="ficha"><p class="ruta">${tipo}</p>
-    <h2>${emojiPunto(p)} ${esc(p.nombre || p.subtipo || p.tipo)}</h2>
+  mostrar(`<article class="ficha">
+    <h2>${esc(p.nombre || p.subtipo || p.tipo)}</h2><p class="ruta">${tipo}</p>
     <div class="etiquetas">${p.subtipo && p.subtipo !== p.nombre ? `<span class="etq">${esc(p.subtipo)}</span>` : ''}</div>
     <div class="acciones"><a class="accion principal" target="_blank" rel="noopener"
       href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking">${svg('caminar')}Cómo llegar</a></div>

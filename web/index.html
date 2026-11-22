@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=1.0.2">
+<link rel="stylesheet" href="/static/styles.css?v=1.1.0">
 </head>
 <body>
 <!-- ============ PORTADA ============ -->
@@ -22,8 +22,7 @@
     <button type="button" class="l-link" data-entrar>Ver el mapa <span aria-hidden="true">→</span></button>
   </header>
   <main class="l-hero">
-    <p class="l-eti"><span class="punto-vivo"></span> Vicerrectorado · Ciudad Universitaria</p>
-    <h1>Encuentra cualquier oficina del <span>Vicerrectorado</span> en segundos</h1>
+    <h1>Encuentra cualquier oficina del <em>Vicerrectorado</em> en segundos</h1>
     <p class="l-sub">Dónde queda, qué trámites atiende, en qué horario y cómo llegar caminando desde donde estés.</p>
     <form id="l-buscar" class="l-buscar" role="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
@@ -31,8 +30,8 @@
       <button type="submit">Buscar</button>
     </form>
     <div class="l-chips">
-      <button data-q="título">🎓 Título</button><button data-q="kardex">📄 Kardex</button><button data-q="PSA">📝 Admisión PSA</button>
-      <button data-q="becas">🤝 Becas</button><button data-q="posgrado">🏛️ Posgrado</button><button data-q="vocacional">🧭 Test vocacional</button>
+      <button data-q="título"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>Título</button><button data-q="kardex"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Kardex</button><button data-q="PSA"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Admisión PSA</button>
+      <button data-q="becas"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Becas</button><button data-q="posgrado"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>Posgrado</button><button data-q="vocacional"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>Test vocacional</button>
     </div>
     <dl class="l-stats" id="l-stats">
       <div><dt>Oficinas</dt><dd data-k="oficinas">—</dd></div>
@@ -41,11 +40,11 @@
       <div><dt>Km de caminos</dt><dd data-k="km">—</dd></div>
     </dl>
   </main>
-  <section class="l-pasos" aria-label="Cómo funciona">
-    <article><b>01</b><h2>Busca</h2><p>Escribe el trámite o elige uno de los atajos.</p></article>
-    <article><b>02</b><h2>Ubica</h2><p>Mira en el mapa dónde está la oficina y qué atiende.</p></article>
-    <article><b>03</b><h2>Llega</h2><p>Pulsa “Cómo llegar” y tu celular te guía a pie.</p></article>
-  </section>
+  <ol class="l-flujo" aria-label="Cómo funciona">
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg><span><b>Busca</b> el trámite o elige un atajo</span></li>
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg><span><b>Ubica</b> la oficina y mira qué atiende</span></li>
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5 5 0 0 1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5.1-.8.1L6 8.3V13h2V9.6z"/></svg><span><b>Llega</b> con la ruta a pie en tu celular</span></li>
+  </ol>
   <footer class="l-pie">SIG INF442-SA · Grupo 16 · Datos en WGS 84 · Base © OpenStreetMap contributors</footer>
 </section>
 
@@ -98,12 +97,12 @@
         </section>
         <h2 class="titulo-seccion">1 · Elige qué necesitas hacer</h2>
         <div class="accesos">
-          <button class="acceso" data-q="título"><span class="ic" style="--c:#c2410c">🎓</span><span>Sacar mi título</span></button>
-          <button class="acceso" data-q="kardex"><span class="ic" style="--c:#1d4ed8">📄</span><span>Kardex y notas</span></button>
-          <button class="acceso" data-q="PSA"><span class="ic" style="--c:#7c3aed">📝</span><span>Admisión (PSA)</span></button>
-          <button class="acceso" data-q="becas"><span class="ic" style="--c:#047857">🤝</span><span>Becas y salud</span></button>
-          <button class="acceso" data-q="posgrado"><span class="ic" style="--c:#0e7490">🏛️</span><span>Posgrado</span></button>
-          <button class="acceso" data-q="vocacional"><span class="ic" style="--c:#be185d">🧭</span><span>Test vocacional</span></button>
+          <button class="acceso" data-q="título"><span class="ic" style="--c:#c2410c"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></span><span>Sacar mi título</span></button>
+          <button class="acceso" data-q="kardex"><span class="ic" style="--c:#1d4ed8"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span><span>Kardex y notas</span></button>
+          <button class="acceso" data-q="PSA"><span class="ic" style="--c:#7c3aed"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></span><span>Admisión (PSA)</span></button>
+          <button class="acceso" data-q="becas"><span class="ic" style="--c:#047857"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span>Becas y salud</span></button>
+          <button class="acceso" data-q="posgrado"><span class="ic" style="--c:#0e7490"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg></span><span>Posgrado</span></button>
+          <button class="acceso" data-q="vocacional"><span class="ic" style="--c:#be185d"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg></span><span>Test vocacional</span></button>
         </div>
         <h2 class="titulo-seccion">O busca la oficina en la lista <span id="cuenta" class="contador"></span></h2>
         <div id="directorio"><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div></div>
@@ -218,8 +217,8 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=1.0.2"></script>
-<script src="/static/portada.js?v=1.0.2"></script>
-<script src="/static/ui.js?v=1.0.2"></script>
+<script src="/static/app.js?v=1.1.0"></script>
+<script src="/static/portada.js?v=1.1.0"></script>
+<script src="/static/ui.js?v=1.1.0"></script>
 </body>
 </html>

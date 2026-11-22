@@ -187,8 +187,8 @@ function ficha(p, cercanos = '') {
   const ruta = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=walking`;
   const tipoC = color('oficina', p.clasificacion);
   return `<article class="ficha">
-    <p class="ruta">${esc(p.depende_de ? p.depende_de + ' › ' : '')}${esc(p.dependencia)}</p>
     <h2>${esc(p.nombre)}${p.sigla ? ` <small>${esc(p.sigla)}</small>` : ''}</h2>
+    <p class="ruta">${esc(p.depende_de ? p.depende_de + ' › ' : '')}${esc(p.dependencia)}</p>
     <div class="etiquetas"><span class="etq"><i style="background:${tipoC}"></i>${esc(SIM.oficina[p.clasificacion]?.[1] || p.clasificacion_nombre)}</span>
       ${p.verificado ? '<span class="etq ok">✓ Verificada en campo</span>' : '<span class="etq pend">Ubicación por confirmar</span>'}</div>
     <div class="acciones">
