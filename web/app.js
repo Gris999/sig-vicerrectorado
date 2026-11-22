@@ -3,11 +3,11 @@
 
 // ---------------------------------------------------------------- simbología (una sola fuente para mapa y leyenda)
 const SIM = {
-  oficina:  { DESPACHO: ['#d68910', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#1d4f91', 'Dirección / departamento'], ATENCION: ['#c0392b', 'Atención al público (trámites)'] },
+  oficina:  { DESPACHO: ['#960018', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#00338d', 'Dirección / departamento'], ATENCION: ['#1f7f99', 'Atención al público (trámites)'] },
   punto:    { entrada: ['#2c3e50', 'Entrada / portón'], extintor: ['#e74c3c', 'Extintor'], servicio: ['#16a085', 'Servicio: baño, comida, salud…'] },
   via:      { via_interna: ['#7f8c8d', 'Vía interna', 4], sendero: ['#c39b77', 'Sendero peatonal', 2], escalera: ['#8e44ad', 'Escalera', 3] },
-  edificio: { ADMINISTRATIVO: ['#f5b041', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#76d7c4', 'Edificio de servicios'], ACADEMICO: ['#d5d8dc', 'Otros edificios / módulos'] },
-  zona:     { campus: ['#1d4f91', 'Límite de la Ciudad Universitaria'], cancha: ['#58d68d', 'Cancha'], jardin: ['#a9dfbf', 'Jardín / área verde'], parqueo: ['#d6dbdf', 'Parqueo'] },
+  edificio: { ADMINISTRATIVO: ['#e7b3ba', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#b9dde7', 'Edificio de servicios'], ACADEMICO: ['#dcdfe4', 'Otros edificios / módulos'] },
+  zona:     { campus: ['#960018', 'Límite de la Ciudad Universitaria'], cancha: ['#58d68d', 'Cancha'], jardin: ['#a9dfbf', 'Jardín / área verde'], parqueo: ['#d6dbdf', 'Parqueo'] },
 };
 const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').replace(/ \(.*\)$/, '').split(',')[0].slice(0, 24);
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
@@ -165,7 +165,7 @@ function inicio() {
 function etiquetaZona(p) { return `${SIM.zona[p.tipo]?.[1] || p.tipo}${p.nombre ? ': ' + p.nombre : ''}${p.detalle ? ' (' + p.detalle + ')' : ''} · ${m2(p.area_m2)}`; }
 function marcar(lls, opts = {}) {
   resaltado.clearLayers();
-  lls.forEach(ll => L.circleMarker(ll, { radius: 7, color: '#fff', weight: 0, fillColor: '#1d4f91', fillOpacity: .25, interactive: false }).addTo(resaltado));
+  lls.forEach(ll => L.circleMarker(ll, { radius: 7, color: '#fff', weight: 0, fillColor: '#960018', fillOpacity: .2, interactive: false }).addTo(resaltado));
   if (lls.length && !opts.noZoom) { const m = margenes(); mapa.fitBounds(L.latLngBounds(lls).pad(.2), { maxZoom: 18, paddingTopLeft: m.tl, paddingBottomRight: m.br }); }
 }
 const ll = f => [f.geometry.coordinates[1], f.geometry.coordinates[0]];
@@ -182,7 +182,7 @@ function ficha(p, cercanos = '') {
   const dato = (ic, k, v) => `<li>${svg(ic)}<span><span class="k">${k}</span><span class="v">${v || '<span class="falta">Sin dato aún</span>'}</span></span></li>`;
   const tramites = p.tramites ? `<div class="seccion-f"><h3>¿Qué trámites hago aquí?</h3><div class="tramites">${p.tramites.split(';').map(t => `<span class="tramite">${esc(t.trim())}</span>`).join('')}</div></div>` : '';
   const dir = p.metodo_captura?.match(/\((.*)\)/)?.[1];
-  const donde = [p.edificio, p.piso].filter(Boolean).map(esc).join(' · ') || (dir ? esc(dir) : '');
+  const donde = [p.edificio || (dir ? dir.replace(/,? ?\d+\.º piso$/, '') : ''), p.piso].filter(Boolean).map(esc).join(' · ');
   const ruta = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=walking`;
   const tipoC = color('oficina', p.clasificacion);
   return `<article class="ficha">
@@ -232,7 +232,7 @@ async function verOficina(id) {
   resaltado.clearLayers();
   centrar(ll(f));
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
-    L.polyline([ll(f), ll(x)], { color: '#e74c3c', weight: 2, dashArray: '4 4' }).addTo(resaltado));
+    L.polyline([ll(f), ll(x)], { color: '#960018', weight: 2, opacity: .7, dashArray: '4 5' }).addTo(resaltado));
 }
 
 function listaOficinas(feats, titulo, extra = '') {

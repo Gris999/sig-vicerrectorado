@@ -327,6 +327,118 @@ table.descargas a:hover{background:var(--azul-100)}
   *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 }
 
+/* ============================================================
+   v0.7 · TEMA INSTITUCIONAL UAGRM
+   Colores tomados de uagrm.edu.bo: guinda #960018, azul #00338d, celeste #55a6bc
+   Tipografía: Merriweather Sans (la del sitio oficial) en títulos, Inter en interfaz
+   ============================================================ */
+:root{
+  --guinda-950:#4a000c; --guinda-900:#670000; --guinda-800:#7a0014; --guinda-700:#960018; --guinda-600:#b1040e;
+  --guinda-100:#f6dde1; --guinda-50:#fcf2f4;
+  --azul-900:#0e1f3d; --azul-800:#21344d; --azul-700:#00338d; --azul-500:#1f5fbf; --azul-100:#e3ebf8; --azul-50:#f2f6fc;
+  --celeste:#55a6bc; --celeste-700:#1f7f99; --oro:#c99a2e;
+  --titulos:'Merriweather Sans','Inter',system-ui,sans-serif;
+  --fondo:#f6f7f9; --linea:#e4e6eb;
+}
+h1,h2,h3,h4,.titulo-seccion,.kpi b,.marca h1,.ficha h2,.bienvenida h2{font-family:var(--titulos)}
+
+/* panel: cabecera institucional en guinda */
+.hoja{border:1px solid rgba(0,0,0,.04)}
+.cabecera{background:linear-gradient(160deg,var(--guinda-700) 0%,var(--guinda-800) 55%,var(--guinda-900) 100%);border-bottom:0;padding:18px 18px 0;position:relative;overflow:hidden}
+.cabecera::after{content:'';position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.10),rgba(255,255,255,0) 70%);pointer-events:none}
+.marca{position:relative;z-index:1;margin-bottom:16px}
+.logo{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);width:40px;height:40px;border-radius:12px}
+.logo svg{fill:var(--guinda-700);width:22px;height:22px}
+.marca .sobre{margin:0;font:600 11px/1.2 var(--fuente);letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.marca h1{color:#fff;font-size:22px;font-weight:800;letter-spacing:-.3px;margin-top:2px}
+.buscador{z-index:2}
+.buscador input{background:#fff;border-color:transparent;box-shadow:0 6px 16px -4px rgba(74,0,12,.45);height:46px}
+.buscador input:focus{border-color:var(--oro);box-shadow:0 0 0 3px rgba(201,154,46,.35),0 6px 16px -4px rgba(74,0,12,.45)}
+.segmentos{position:relative;z-index:1;margin:14px -18px 0;padding:0 10px;background:var(--blanco);border-radius:16px 16px 0 0;gap:0}
+.tab{padding:13px 4px 11px;font-size:13.5px}
+.tab.activo{color:var(--guinda-700);border-bottom:3px solid var(--guinda-700)}
+.cuerpo{padding:18px}
+
+/* guía de inicio: azul institucional con filete guinda */
+.bienvenida{background:linear-gradient(140deg,var(--azul-800),var(--azul-900));border-left:4px solid var(--oro);box-shadow:0 10px 24px -10px rgba(14,31,61,.55);padding:18px}
+.bienvenida h2{font-size:17px;line-height:1.3}
+.pasos span{background:var(--oro);color:var(--azul-900)}
+.titulo-seccion{font-family:var(--fuente);color:var(--azul-800);font-size:11.5px;letter-spacing:1px}
+.titulo-seccion::after{content:'';flex:1;height:1px;background:var(--linea);margin-left:6px}
+
+/* accesos rápidos con borde de marca al pasar */
+.acceso{background:var(--blanco);border-color:var(--linea);padding:14px 6px;font-weight:600;color:var(--azul-800)}
+.acceso:hover{border-color:var(--guinda-700);box-shadow:0 8px 18px -8px rgba(150,0,24,.35)}
+.acceso .ic{width:42px;height:42px;border-radius:12px}
+
+/* listas */
+.grupo-dir h4{font-family:var(--fuente);font-size:12.5px;color:var(--azul-800);display:flex;justify-content:space-between}
+.grupo-dir h4 small{background:var(--azul-50);color:var(--azul-700);border-radius:10px;padding:0 7px;font-weight:600}
+.lista{border-color:var(--linea);box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.tarjeta{padding:12px 14px}
+.tarjeta:hover{background:var(--guinda-50)}
+.tarjeta .pin{border-radius:11px;font-family:var(--titulos);box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+.tarjeta .dist{color:var(--guinda-700)}
+.volver{color:var(--guinda-700)}.volver:hover{background:var(--guinda-50)}
+.respuesta{background:var(--azul-50);border-left:3px solid var(--azul-700)}
+
+/* ficha */
+.ficha .ruta{color:var(--celeste-700);font-weight:600;text-transform:uppercase;letter-spacing:.6px;font-size:11px}
+.ficha h2{font-size:22px;font-weight:800;color:var(--azul-900);line-height:1.2}
+.ficha h2 small{color:var(--guinda-700);font-weight:700}
+.accion{color:var(--azul-700);border-color:var(--linea)}
+.accion:hover{background:var(--azul-50)}
+.accion.principal{background:linear-gradient(160deg,var(--guinda-700),var(--guinda-800));border-color:var(--guinda-800);color:#fff;box-shadow:0 6px 14px -6px rgba(150,0,24,.6)}
+.accion.principal:hover{background:var(--guinda-900)}
+.datos svg{fill:var(--guinda-700)}
+.tramite{background:var(--azul-50);color:var(--azul-800);border:1px solid var(--azul-100);font-weight:500}
+.cerca li{background:var(--blanco);border:1px solid var(--linea)}
+.cerca li b{font-family:var(--titulos);color:var(--azul-800)}
+.seccion-f h3{color:var(--azul-800)}
+
+/* botones y formularios */
+.primario{background:linear-gradient(160deg,var(--guinda-700),var(--guinda-800))}.primario:hover{background:var(--guinda-900)}
+.secundario{color:var(--azul-700)}
+.pastilla:hover,.pastilla.activa{border-color:var(--guinda-700);color:var(--guinda-700);background:var(--guinda-50)}
+.tarjeta-accion{background:linear-gradient(135deg,var(--guinda-50),var(--blanco));border-color:var(--guinda-100)}
+.kpi{background:var(--blanco);border-top:3px solid var(--guinda-700)}
+.kpi:nth-child(2){border-top-color:var(--azul-700)}.kpi:nth-child(3){border-top-color:var(--celeste)}
+.kpi b{color:var(--azul-900)}
+th{color:var(--azul-800)}
+table.descargas a{background:var(--guinda-50);color:var(--guinda-700)}table.descargas a:hover{background:var(--guinda-100)}
+:focus-visible{outline-color:var(--oro)}
+.pie{background:var(--fondo)}
+.pie a{color:var(--guinda-700);font-weight:600}
+
+/* controles del mapa */
+.norte svg{fill:var(--guinda-700)}
+.btn-ubic svg{fill:var(--azul-700)}
+.leyenda summary{font-family:var(--titulos);color:var(--azul-800)}
+.leaflet-tooltip.lbl{font-family:var(--titulos);font-weight:700;color:var(--azul-900);border:1px solid var(--linea)}
+#toast{background:var(--azul-900)}
+
+/* celular: el buscador flota y la cabecera guinda no ocupa espacio */
+@media (max-width:640px){
+  .cabecera{position:fixed;z-index:1001;top:0;left:0;right:0;overflow:visible;background:none;padding:calc(env(safe-area-inset-top) + 10px) 10px 0;pointer-events:none}
+  .cabecera>*{pointer-events:auto}
+  .cabecera::after{display:none}
+  .buscador input{box-shadow:0 4px 14px rgba(16,24,40,.18);border:1px solid var(--linea)}
+  .segmentos{margin:0 12px;padding:0;border-radius:0}
+  .hoja{border-top:4px solid var(--guinda-700)}
+}
+
+/* modo oscuro con la misma identidad */
+@media (prefers-color-scheme:dark){
+  :root{--guinda-50:#2a1217;--guinda-100:#4a1b24;--azul-50:#141f33;--azul-100:#1f3354;--fondo:#121821}
+  .ficha h2,.kpi b,.cerca li b,.bienvenida h2{color:var(--tinta)}
+  .titulo-seccion,.grupo-dir h4,.acceso,.seccion-f h3,th,.leyenda summary{color:var(--tinta-2)}
+  .tab.activo,.volver,.pie a,.tarjeta .dist,.ficha h2 small{color:#f18c9b;border-bottom-color:#f18c9b}
+  .datos svg{fill:#f18c9b}
+  .tramite{color:#cfe0ff;border-color:var(--azul-100)}
+  .leaflet-tooltip.lbl{color:var(--tinta)}
+}
+
 /* ---------- impresión del plano ---------- */
 #plano-print{display:none}
 @media print{
