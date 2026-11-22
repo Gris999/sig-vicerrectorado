@@ -6,11 +6,12 @@
 <meta name="theme-color" content="#7a0014">
 <title>¿Dónde queda? · Vicerrectorado UAGRM</title>
 <meta name="description" content="Encuentra las oficinas del Vicerrectorado de la UAGRM: dónde quedan, qué trámites atienden y cómo llegar.">
+<link rel="icon" type="image/png" href="/static/img/uagrm-favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=0.7.2">
+<link rel="stylesheet" href="/static/styles.css?v=0.8.0">
 </head>
 <body>
 <div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
@@ -20,10 +21,10 @@
 
   <div class="cabecera">
     <div class="marca">
-      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span>
-      <div>
-        <p class="sobre">UAGRM · Vicerrectorado</p>
+      <img class="logo-uagrm" src="/static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" width="707" height="88">
+      <div class="titulo-app">
         <h1>¿Dónde queda?</h1>
+        <p class="sobre">Oficinas del Vicerrectorado</p>
       </div>
     </div>
     <form id="buscar" role="search" class="buscador">
@@ -164,6 +165,7 @@
 
 <div id="plano-print" aria-hidden="true">
   <div class="cajetin">
+    <img src="/static/img/uagrm-logo.png" alt="" class="logo-print">
     <b>PLANO DIGITAL · OFICINAS ADMINISTRATIVAS DEL VICERRECTORADO (1)</b><br>
     Universidad Autónoma Gabriel René Moreno · Santa Cruz de la Sierra<br>
     Sistema de referencia: WGS 84 (EPSG:4326) · Datos base: © OpenStreetMap contributors · <span id="fecha-plano"></span><br>
@@ -174,7 +176,7 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=0.7.2"></script>
-<script src="/static/ui.js?v=0.7.2"></script>
+<script src="/static/app.js?v=0.8.0"></script>
+<script src="/static/ui.js?v=0.8.0"></script>
 </body>
 </html>

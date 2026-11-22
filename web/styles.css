@@ -439,6 +439,14 @@ table.descargas a{background:var(--guinda-50);color:var(--guinda-700)}table.desc
   .leaflet-tooltip.lbl{color:var(--tinta)}
 }
 
+/* logo oficial UAGRM en la cabecera */
+.marca{flex-direction:column;align-items:flex-start;gap:12px}
+.logo-uagrm{display:block;width:100%;max-width:300px;height:auto}
+.titulo-app{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-top:12px;border-top:1px solid rgba(255,255,255,.18);width:100%}
+.titulo-app h1{margin:0}
+.titulo-app .sobre{font-size:11px}
+.logo-print{display:none}
+
 /* ---------- impresión del plano ---------- */
 #plano-print{display:none}
 @media print{
@@ -448,5 +456,6 @@ table.descargas a{background:var(--guinda-50);color:var(--guinda-700)}table.desc
   #mapa{position:relative;width:100%;height:165mm!important;border:1px solid #000}
   .leaflet-top.leaflet-left{left:0}
   .leyenda details>*{display:block}
-  #plano-print{display:block;border:1px solid #000;border-top:0;padding:6px 10px;font-size:10px}
+  #plano-print{display:block;border:1px solid #000;border-top:0;padding:6px 10px;font-size:10px;background:#960018;color:#fff}
+  .logo-print{display:block;height:22px;margin-bottom:4px}
 }
