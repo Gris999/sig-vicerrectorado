@@ -13,6 +13,29 @@ const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección|Ofi
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
 const corto = p => (p.sigla || p.nombre.replace(/\s*\(.*\)\s*/g, '').replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').split(/[ ,]+/).filter(w => w.length > 2).map(w => w[0]).join('')).slice(0, 5).toUpperCase();
 const MARCAS = {};
+const MOVIL = () => innerWidth <= 640;
+const SIN_MOV = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Espacio que tapa la interfaz, para encuadrar el mapa en la parte visible
+function margenes() {
+  if (MOVIL()) return { tl: [16, 130], br: [16, $('panel').getBoundingClientRect().height + 16] };
+  return { tl: [$('panel').getBoundingClientRect().right + 24, 24], br: [24, 24] };
+}
+function irA(latlng, zoom) { SIN_MOV ? mapa.setView(latlng, zoom) : mapa.flyTo(latlng, zoom, { duration: .6 }); }
+// Centra un punto en la parte del mapa que no tapa el panel
+function centrar(latlng, metros = 140) {
+  const m = margenes(), b = L.latLng(latlng).toBounds(metros);
+  SIN_MOV ? mapa.fitBounds(b, { paddingTopLeft: m.tl, paddingBottomRight: m.br, maxZoom: 18 })
+          : mapa.flyToBounds(b, { paddingTopLeft: m.tl, paddingBottomRight: m.br, maxZoom: 18, duration: .6 });
+}
+// Emoji por tipo de servicio (lenguaje visual universal)
+const EMOJI = { 'Baños': '🚻', 'Comedor / restaurante': '🍽️', 'Patio de comidas': '🍽️', 'Kiosco': '🥤', 'Consultorio médico': '🩺',
+  'Biblioteca': '📚', 'Guardería': '🧸', 'Teatro / auditorio': '🎭', 'Fotocopiadora': '🖨️', 'Parqueo de bicicletas': '🚲',
+  'Parqueo de motos': '🏍️', 'Veterinaria': '🐾', 'Estudio (Canal/radio)': '📺' };
+function iconoPunto(p, dest = false) {
+  if (p.tipo === 'entrada' && !dest) return L.divIcon({ className: '', iconSize: [12, 12], html: `<div class="ic-serv mini" style="--c:${color('punto', 'entrada')}"></div>` });
+  const e = p.tipo === 'extintor' ? '🧯' : p.tipo === 'entrada' ? '🚪' : (EMOJI[p.subtipo] || '📍');
+  return L.divIcon({ className: '', iconSize: [26, 26], html: `<div class="ic-serv${dest ? ' dest' : ''}" style="--c:${color('punto', p.tipo)}">${e}</div>` });
+}
 function iconoPin(p, sel = false) {
   const c = color('oficina', p.clasificacion);
   return L.divIcon({ className: '', iconSize: [34, 42], iconAnchor: [17, 41], tooltipAnchor: [14, -26],
@@ -78,8 +101,8 @@ const capas = {
     onEachFeature: (f, l) => l.bindTooltip(`${SIM.via[f.properties.tipo]?.[1] || 'Vía'}${f.properties.nombre ? ': ' + f.properties.nombre : ''} · ${Math.round(f.properties.longitud_m)} m`),
   }),
   puntos: L.geoJSON(null, {
-    pointToLayer: (f, ll) => L.circleMarker(ll, { radius: f.properties.tipo === 'entrada' ? 4 : 6, color: '#fff', weight: 1.5, fillColor: color('punto', f.properties.tipo), fillOpacity: 1 }),
-    onEachFeature: (f, l) => l.bindTooltip(nombrePunto(f.properties)),
+    pointToLayer: (f, ll) => L.marker(ll, { icon: iconoPunto(f.properties), title: nombrePunto(f.properties), keyboard: false }),
+    onEachFeature: (f, l) => { l.bindTooltip(nombrePunto(f.properties), { direction: 'top', offset: [0, -12] }); l.on('click', () => verPunto(f)); },
   }),
   oficinas: L.geoJSON(null, {
     pointToLayer: (f, ll) => L.marker(ll, { icon: iconoPin(f.properties), riseOnHover: true, title: f.properties.nombre, keyboard: true }),
@@ -138,7 +161,7 @@ function etiquetaZona(p) { return `${SIM.zona[p.tipo]?.[1] || p.tipo}${p.nombre 
 function marcar(lls, opts = {}) {
   resaltado.clearLayers();
   lls.forEach(ll => L.circleMarker(ll, { radius: 7, color: '#fff', weight: 0, fillColor: '#1d4f91', fillOpacity: .25, interactive: false }).addTo(resaltado));
-  if (lls.length && !opts.noZoom) mapa.fitBounds(L.latLngBounds(lls).pad(.3), { maxZoom: 18, paddingTopLeft: [innerWidth > 760 ? 440 : 20, 20], paddingBottomRight: [20, innerWidth > 760 ? 20 : innerHeight * .5] });
+  if (lls.length && !opts.noZoom) { const m = margenes(); mapa.fitBounds(L.latLngBounds(lls).pad(.2), { maxZoom: 18, paddingTopLeft: m.tl, paddingBottomRight: m.br }); }
 }
 const ll = f => [f.geometry.coordinates[1], f.geometry.coordinates[0]];
 
@@ -202,7 +225,7 @@ async function verOficina(id) {
   };
   history.replaceState(null, '', `?oficina=${id}`);
   resaltado.clearLayers();
-  mapa.flyTo(ll(f), Math.max(mapa.getZoom(), 18), { duration: .6 });
+  centrar(ll(f));
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
     L.polyline([ll(f), ll(x)], { color: '#e74c3c', weight: 2, dashArray: '4 4' }).addTo(resaltado));
 }
@@ -304,17 +327,8 @@ function pintarDirectorio(deps) {
   $('directorio').querySelectorAll('[data-oficina]').forEach(el => el.onclick = () => verOficina(+el.dataset.oficina));
 }
 
-// ---------------------------------------------------------------- hoja inferior (móvil)
-const hoja = $('panel');
-function abrirHoja() { if (innerWidth <= 760) { hoja.classList.remove('baja'); hoja.classList.add('alta'); } }
-$('asa').onclick = () => {
-  if (hoja.classList.contains('alta')) hoja.classList.replace('alta', 'baja');
-  else if (hoja.classList.contains('baja')) hoja.classList.remove('baja');
-  else hoja.classList.add('alta');
-  setTimeout(() => mapa.invalidateSize(), 260);
-};
-mapa.on('dragstart', () => { if (innerWidth <= 760 && hoja.classList.contains('alta')) hoja.classList.remove('alta'); });
-$('texto').addEventListener('input', () => { $('limpiar').hidden = !$('texto').value; });
+// (la hoja inferior arrastrable está en ui.js)
+$('texto').addEventListener('input', () => { $('limpiar').hidden = !$('texto').value; sugerir(); });
 $('limpiar').onclick = () => { $('texto').value = ''; $('limpiar').hidden = true; inicio(); $('texto').focus(); };
 document.querySelectorAll('.pastilla').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.pastilla').forEach(x => x.classList.toggle('activa', x === b));
@@ -441,10 +455,10 @@ async function recargar() {
   mapa.invalidateSize();
   etiquetasSegunZoom();
   const campus = capas.zonas.getLayers().filter(l => l.feature.properties.tipo === 'campus');
-  const izq = innerWidth > 760 ? 440 : 10, abajo = innerWidth > 760 ? 10 : innerHeight * .46;
+  const mg = margenes();
   const marco = campus.length ? L.featureGroup(campus).getBounds() : capas.edificios.getBounds();
   OFICINAS.forEach(f => { const p = L.latLng(ll(f)); if (marco.pad(.5).contains(p)) marco.extend(p); });
-  mapa.fitBounds(marco, { paddingTopLeft: [izq + 10, 30], paddingBottomRight: [30, abajo + 30] });
+  mapa.fitBounds(marco, { paddingTopLeft: mg.tl, paddingBottomRight: mg.br });
   const params = new URLSearchParams(location.search);
   if (params.get('oficina')) verOficina(+params.get('oficina'));
   if (params.has('equipo')) mostrarTab('equipo');
