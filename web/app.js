@@ -3,11 +3,11 @@
 
 // ---------------------------------------------------------------- simbología (una sola fuente para mapa y leyenda)
 const SIM = {
-  oficina:  { DESPACHO: ['#960018', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#00338d', 'Dirección / departamento'], ATENCION: ['#1f7f99', 'Atención al público (trámites)'] },
-  punto:    { entrada: ['#2c3e50', 'Entrada / portón'], extintor: ['#e74c3c', 'Extintor'], servicio: ['#16a085', 'Servicio: baño, comida, salud…'] },
-  via:      { via_interna: ['#7f8c8d', 'Vía interna', 4], sendero: ['#c39b77', 'Sendero peatonal', 2], escalera: ['#8e44ad', 'Escalera', 3] },
-  edificio: { ADMINISTRATIVO: ['#e7b3ba', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#b9dde7', 'Edificio de servicios'], ACADEMICO: ['#dcdfe4', 'Otros edificios / módulos'] },
-  zona:     { campus: ['#960018', 'Límite de la Ciudad Universitaria'], cancha: ['#58d68d', 'Cancha'], jardin: ['#a9dfbf', 'Jardín / área verde'], parqueo: ['#d6dbdf', 'Parqueo'] },
+  oficina:  { DESPACHO: ['#e0455c', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#3b82f6', 'Dirección / departamento'], ATENCION: ['#14b8d4', 'Atención al público (trámites)'] },
+  punto:    { entrada: ['#94a3b8', 'Entrada / portón'], extintor: ['#f97316', 'Extintor'], servicio: ['#2dd4bf', 'Servicio: baño, comida, salud…'] },
+  via:      { via_interna: ['#38bdf8', 'Vía interna', 2.4], sendero: ['#2dd4bf', 'Sendero peatonal', 1.2], escalera: ['#a78bfa', 'Escalera', 2] },
+  edificio: { ADMINISTRATIVO: ['#9f1239', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#155e75', 'Edificio de servicios'], ACADEMICO: ['#1e293b', 'Otros edificios / módulos'] },
+  zona:     { campus: ['#fb7185', 'Límite de la Ciudad Universitaria'], cancha: ['#166534', 'Cancha'], jardin: ['#14532d', 'Jardín / área verde'], parqueo: ['#1f2937', 'Parqueo'] },
 };
 const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').replace(/ \(.*\)$/, '').split(',')[0].slice(0, 24);
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
@@ -18,7 +18,8 @@ const SIN_MOV = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Espacio que tapa la interfaz, para encuadrar el mapa en la parte visible
 function margenes() {
   if (MOVIL()) return { tl: [16, 76], br: [16, $('panel').getBoundingClientRect().height + 16] };
-  return { tl: [$('panel').getBoundingClientRect().right + 24, 24], br: [24, 24] };
+  const t = document.getElementById('tablero'), der = t && getComputedStyle(t).display !== 'none' ? innerWidth - t.getBoundingClientRect().left + 16 : 24;
+  return { tl: [$('panel').getBoundingClientRect().right + 24, 24], br: [der, 24] };
 }
 function irA(latlng, zoom) { SIN_MOV ? mapa.setView(latlng, zoom) : mapa.flyTo(latlng, zoom, { duration: .6 }); }
 // Centra un punto en la parte del mapa que no tapa el panel
@@ -39,7 +40,7 @@ function iconoPunto(p, dest = false) {
 function iconoPin(p, sel = false) {
   const c = color('oficina', p.clasificacion);
   return L.divIcon({ className: '', iconSize: [34, 42], iconAnchor: [17, 41], tooltipAnchor: [14, -26],
-    html: `<div class="pin-of${sel ? ' sel' : ''}"><svg viewBox="0 0 34 42"><path d="M17 1.5C8.4 1.5 1.5 8.3 1.5 16.7 1.5 28 17 40.5 17 40.5s15.5-12.5 15.5-23.8C32.5 8.3 25.6 1.5 17 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/></svg><span${corto(p).length > 4 ? ' class="xs"' : ''}>${esc(corto(p))}</span></div>` });
+    html: `<div class="pin-of${sel ? ' sel' : ''}" style="--c:${c}"><i class="haz"></i><i class="base"></i><svg viewBox="0 0 34 42"><path d="M17 1.5C8.4 1.5 1.5 8.3 1.5 16.7 1.5 28 17 40.5 17 40.5s15.5-12.5 15.5-23.8C32.5 8.3 25.6 1.5 17 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/></svg><span${corto(p).length > 4 ? ' class="xs"' : ''}>${esc(corto(p))}</span></div>` });
 }
 let SELECCION = null;
 function seleccionar(id) {
@@ -86,18 +87,18 @@ const capas = {
   zonas: L.geoJSON(null, {
     pane: 'zonas',
     style: f => f.properties.tipo === 'campus'
-      ? { color: color('zona', 'campus'), weight: 2.5, dashArray: '8 5', fill: false }
-      : { color: '#0003', weight: 1, fillColor: color('zona', f.properties.tipo), fillOpacity: .65 },
+      ? { color: color('zona', 'campus'), weight: 2, dashArray: '6 6', fill: false, className: 'brillo-campus' }
+      : { color: color('zona', f.properties.tipo), weight: .8, opacity: .8, fillColor: color('zona', f.properties.tipo), fillOpacity: .45 },
     onEachFeature: (f, l) => { if (f.properties.tipo !== 'campus') { l.bindTooltip(etiquetaZona(f.properties)); l.on('click', () => verContenido('zona', f)); } },
   }),
   edificios: L.geoJSON(null, {
     pane: 'edificios',
-    style: f => ({ color: '#555', weight: 1, fillColor: color('edificio', f.properties.uso), fillOpacity: .8 }),
+    style: f => ({ color: f.properties.uso === 'ADMINISTRATIVO' ? '#fb7185' : '#38bdf8', weight: .8, opacity: f.properties.uso === 'ACADEMICO' ? .35 : .9, fillColor: color('edificio', f.properties.uso), fillOpacity: .7, className: f.properties.uso === 'ADMINISTRATIVO' ? 'brillo-edif' : '' }),
     onEachFeature: (f, l) => { l.bindTooltip(f.properties.nombre); l.on('click', () => verContenido('edificio', f)); },
   }),
   vias: L.geoJSON(null, {
     pane: 'vias',
-    style: f => { const [c, , w] = SIM.via[f.properties.tipo] || ['#999', '', 2]; return { color: c, weight: w, opacity: .55, dashArray: f.properties.tipo === 'sendero' ? '4 3' : null }; },
+    style: f => { const [c, , w] = SIM.via[f.properties.tipo] || ['#999', '', 2]; return { color: c, weight: w, opacity: f.properties.tipo === 'sendero' ? .35 : .75, dashArray: f.properties.tipo === 'sendero' ? '2 4' : null, className: f.properties.tipo === 'via_interna' ? 'neon' : '' }; },
     onEachFeature: (f, l) => l.bindTooltip(`${SIM.via[f.properties.tipo]?.[1] || 'Vía'}${f.properties.nombre ? ': ' + f.properties.nombre : ''} · ${Math.round(f.properties.longitud_m)} m`),
   }),
   puntos: L.geoJSON(null, {
@@ -230,10 +231,10 @@ async function verOficina(id) {
   };
   history.replaceState(null, '', `?oficina=${id}`);
   resaltado.clearLayers();
-  if (!SIN_MOV) L.circleMarker(ll(f), { radius: 26, color: '#960018', weight: 2, fillColor: '#960018', fillOpacity: .18, className: 'halo', interactive: false }).addTo(resaltado);
+  if (!SIN_MOV) L.circleMarker(ll(f), { radius: 26, color: '#fbbf24', weight: 2, fillColor: '#fbbf24', fillOpacity: .15, className: 'halo', interactive: false }).addTo(resaltado);
   centrar(ll(f));
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
-    L.polyline([ll(f), ll(x)], { color: '#960018', weight: 2.5, opacity: .85, dashArray: '2 6', lineCap: 'round', className: 'brillo' }).addTo(resaltado));
+    L.polyline([ll(f), ll(x)], { color: '#fbbf24', weight: 2.5, opacity: .9, dashArray: '2 6', lineCap: 'round', className: 'brillo' }).addTo(resaltado));
 }
 
 function listaOficinas(feats, titulo, extra = '') {
@@ -451,6 +452,7 @@ async function recargar() {
   const [, deps, clas] = await Promise.all([recargar(), api('/api/dependencias'), api('/api/clasificaciones')]);
   DEPS = deps; CLAS = clas;
   pintarDirectorio(deps);
+  document.dispatchEvent(new CustomEvent('datos-listos', { detail: { deps } }));
   deps.forEach(d => $('filtro-dep').add(new Option('  '.repeat(d.nivel) + d.nombre + (d.sigla ? ` (${d.sigla})` : ''), d.id)));
   clas.filter(c => ['DESPACHO', 'DIRECCION', 'ATENCION'].includes(c.codigo)).forEach(c => $('filtro-clas').add(new Option(c.nombre, c.codigo)));
   mapa.invalidateSize();

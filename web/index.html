@@ -11,9 +11,51 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=0.9.2">
+<link rel="stylesheet" href="/static/styles.css?v=1.0.2">
 </head>
 <body>
+<!-- ============ PORTADA ============ -->
+<section id="landing" class="landing" aria-label="Inicio">
+  <div class="l-fondo" aria-hidden="true"><span class="l-glow g1"></span><span class="l-glow g2"></span></div>
+  <header class="l-top">
+    <img src="/static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" class="l-logo">
+    <button type="button" class="l-link" data-entrar>Ver el mapa <span aria-hidden="true">→</span></button>
+  </header>
+  <main class="l-hero">
+    <p class="l-eti"><span class="punto-vivo"></span> Vicerrectorado · Ciudad Universitaria</p>
+    <h1>Encuentra cualquier oficina del <span>Vicerrectorado</span> en segundos</h1>
+    <p class="l-sub">Dónde queda, qué trámites atiende, en qué horario y cómo llegar caminando desde donde estés.</p>
+    <form id="l-buscar" class="l-buscar" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+      <input id="l-texto" type="search" autocomplete="off" placeholder="¿Qué trámite necesitas? Ej.: título, kardex, becas" aria-label="Buscar trámite u oficina">
+      <button type="submit">Buscar</button>
+    </form>
+    <div class="l-chips">
+      <button data-q="título">🎓 Título</button><button data-q="kardex">📄 Kardex</button><button data-q="PSA">📝 Admisión PSA</button>
+      <button data-q="becas">🤝 Becas</button><button data-q="posgrado">🏛️ Posgrado</button><button data-q="vocacional">🧭 Test vocacional</button>
+    </div>
+    <dl class="l-stats" id="l-stats">
+      <div><dt>Oficinas</dt><dd data-k="oficinas">—</dd></div>
+      <div><dt>Unidades</dt><dd data-k="unidades">—</dd></div>
+      <div><dt>Edificios</dt><dd data-k="edificios">—</dd></div>
+      <div><dt>Km de caminos</dt><dd data-k="km">—</dd></div>
+    </dl>
+  </main>
+  <section class="l-pasos" aria-label="Cómo funciona">
+    <article><b>01</b><h2>Busca</h2><p>Escribe el trámite o elige uno de los atajos.</p></article>
+    <article><b>02</b><h2>Ubica</h2><p>Mira en el mapa dónde está la oficina y qué atiende.</p></article>
+    <article><b>03</b><h2>Llega</h2><p>Pulsa “Cómo llegar” y tu celular te guía a pie.</p></article>
+  </section>
+  <footer class="l-pie">SIG INF442-SA · Grupo 16 · Datos en WGS 84 · Base © OpenStreetMap contributors</footer>
+</section>
+
+<!-- ============ PANEL DE INDICADORES (escritorio) ============ -->
+<aside id="tablero" class="tablero" aria-label="Indicadores">
+  <div class="t-card"><h3>Cobertura</h3><div class="anillo" id="t-anillo"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" class="a-fondo"/><circle cx="18" cy="18" r="15.9" class="a-valor" id="t-arco"/></svg><b id="t-cob">—</b></div><p id="t-cob-txt">unidades ubicadas</p></div>
+  <div class="t-card"><h3>Oficinas por área</h3><div id="t-barras" class="barras"></div></div>
+  <div class="t-card t-mini"><div><b id="t-km">—</b><span>km de caminos</span></div><div><b id="t-ha">—</b><span>ha de campus</span></div></div>
+</aside>
+
 <div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
 
 <aside id="panel" class="hoja" aria-label="Panel de información">
@@ -21,7 +63,7 @@
 
   <div class="cabecera">
     <div class="marca">
-      <img class="logo-uagrm" src="/static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" width="707" height="88">
+      <button type="button" class="ir-portada" id="ir-portada" aria-label="Volver a la portada"><img class="logo-uagrm" src="/static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" width="707" height="88"></button>
       <div class="titulo-app">
         <h1>¿Dónde queda?</h1>
         <p class="sobre">Oficinas del Vicerrectorado</p>
@@ -176,7 +218,8 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=0.9.2"></script>
-<script src="/static/ui.js?v=0.9.2"></script>
+<script src="/static/app.js?v=1.0.2"></script>
+<script src="/static/portada.js?v=1.0.2"></script>
+<script src="/static/ui.js?v=1.0.2"></script>
 </body>
 </html>
