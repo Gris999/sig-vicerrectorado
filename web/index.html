@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=0.5.3">
+<link rel="stylesheet" href="/static/styles.css?v=0.6.0">
 </head>
 <body>
 <div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
@@ -28,22 +28,11 @@
     </div>
     <form id="buscar" role="search" class="buscador">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
-      <input id="texto" type="search" autocomplete="off" placeholder="Busca una oficina, trámite o lugar" aria-label="Buscar oficina, trámite o lugar"
+      <input id="texto" type="search" autocomplete="off" placeholder="Ej.: título, kardex, becas, Posgrado…" aria-label="Buscar oficina o trámite"
         role="combobox" aria-expanded="false" aria-controls="sugerencias" aria-autocomplete="list">
       <button id="limpiar" type="button" class="icono" aria-label="Limpiar búsqueda" hidden><svg viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></svg></button>
       <ul id="sugerencias" class="sugerencias" role="listbox" aria-label="Sugerencias" hidden></ul>
     </form>
-    <div class="categorias" id="categorias" role="toolbar" aria-label="Filtrar el mapa por categoría">
-      <button class="cat" data-cat="tramites" aria-pressed="false">🗂️ Trámites</button>
-      <button class="cat" data-cat="banos" aria-pressed="false">🚻 Baños</button>
-      <button class="cat" data-cat="comida" aria-pressed="false">🍽️ Comida</button>
-      <button class="cat" data-cat="salud" aria-pressed="false">🩺 Salud</button>
-      <button class="cat" data-cat="bibliotecas" aria-pressed="false">📚 Bibliotecas</button>
-      <button class="cat" data-cat="entradas" aria-pressed="false">🚪 Entradas</button>
-      <button class="cat" data-cat="extintores" aria-pressed="false">🧯 Extintores</button>
-      <button class="cat" data-cat="parqueos" aria-pressed="false">🅿️ Parqueos</button>
-      <button class="cat" data-cat="canchas" aria-pressed="false">⚽ Canchas</button>
-    </div>
     <nav class="segmentos" role="tablist" aria-label="Secciones">
       <button class="tab activo" data-tab="inicio" role="tab">Explorar</button>
       <button class="tab" data-tab="cerca" role="tab">Cerca de mí</button>
@@ -56,7 +45,15 @@
     <section id="tab-inicio" class="contenido">
       <div id="resultado"></div>
       <div id="portada">
-        <h2 class="titulo-seccion">¿Qué necesitas hacer?</h2>
+        <section class="bienvenida" aria-labelledby="bv-titulo">
+          <h2 id="bv-titulo">¿A qué oficina del Vicerrectorado necesitas ir?</h2>
+          <ol class="pasos">
+            <li><span>1</span><div><b>Elige un trámite</b> abajo o escríbelo en el buscador</div></li>
+            <li><span>2</span><div><b>Toca la oficina</b> para ver horario, contacto y qué trámites atiende</div></li>
+            <li><span>3</span><div><b>Pulsa “Cómo llegar”</b> y el celular te guía a pie</div></li>
+          </ol>
+        </section>
+        <h2 class="titulo-seccion">1 · Elige qué necesitas hacer</h2>
         <div class="accesos">
           <button class="acceso" data-q="título"><span class="ic" style="--c:#c2410c">🎓</span><span>Sacar mi título</span></button>
           <button class="acceso" data-q="kardex"><span class="ic" style="--c:#1d4ed8">📄</span><span>Kardex y notas</span></button>
@@ -65,7 +62,7 @@
           <button class="acceso" data-q="posgrado"><span class="ic" style="--c:#0e7490">🏛️</span><span>Posgrado</span></button>
           <button class="acceso" data-q="vocacional"><span class="ic" style="--c:#be185d">🧭</span><span>Test vocacional</span></button>
         </div>
-        <h2 class="titulo-seccion">Todas las oficinas <span id="cuenta" class="contador"></span></h2>
+        <h2 class="titulo-seccion">O busca la oficina en la lista <span id="cuenta" class="contador"></span></h2>
         <div id="directorio"><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div></div>
       </div>
     </section>
@@ -177,7 +174,7 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=0.5.3"></script>
-<script src="/static/ui.js?v=0.5.3"></script>
+<script src="/static/app.js?v=0.6.0"></script>
+<script src="/static/ui.js?v=0.6.0"></script>
 </body>
 </html>

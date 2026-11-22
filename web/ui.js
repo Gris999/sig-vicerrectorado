@@ -73,9 +73,7 @@ function sugerir() {
   if (q.length < 2) return cerrarSugerencias();
   sugerir.t = setTimeout(async () => {
     const r = await api('/api/oficinas?texto=' + encodeURIComponent(q));
-    const qq = sinTilde(q).replace(/s$/, '');
-    const pts = PUNTOS.filter(f => sinTilde(`${f.properties.nombre || ''} ${f.properties.subtipo || ''}`).includes(qq)).slice(0, 4);
-    SUG = [...r.features.slice(0, 6).map(f => ({ t: 'o', f })), ...pts.map(f => ({ t: 'p', f }))];
+    SUG = r.features.slice(0, 7).map(f => ({ t: 'o', f }));
     sugIdx = -1;
     ul.innerHTML = SUG.length ? SUG.map((s, i) => {
       const p = s.f.properties;
@@ -84,7 +82,7 @@ function sugerir() {
            <span class="s-t"><b>${resaltar(p.nombre, q)}</b><small>${esc(p.tramites?.split(';')[0] || p.dependencia)}</small></span></li>`
         : `<li role="option" id="sug-${i}" data-i="${i}"><span class="s-ic" style="background:var(--fondo);font-size:15px">${emojiPunto(p)}</span>
            <span class="s-t"><b>${resaltar(p.nombre || p.subtipo, q)}</b><small>Lugar del campus</small></span></li>`;
-    }).join('') : '<li class="s-vacio">Sin coincidencias. Prueba "título", "becas" o "baños".</li>';
+    }).join('') : '<li class="s-vacio">No encontramos esa oficina. Prueba con "título", "kardex", "becas" o "posgrado".</li>';
     ul.hidden = false;
     $('texto').setAttribute('aria-expanded', 'true');
     ul.querySelectorAll('[data-i]').forEach(li => li.onmousedown = e => { e.preventDefault(); elegir(+li.dataset.i); });
@@ -111,59 +109,6 @@ $('texto').addEventListener('keydown', e => {
 });
 $('texto').addEventListener('blur', () => setTimeout(cerrarSugerencias, 120));
 $('buscar').addEventListener('submit', cerrarSugerencias);
-
-// ---------------------------------------------------------------- categorías del mapa
-const CATS = {
-  tramites:    { t: 'Oficinas de trámites', of: f => f.properties.clasificacion === 'ATENCION' },
-  banos:       { t: 'Baños', pt: p => p.subtipo === 'Baños' },
-  comida:      { t: 'Comida', pt: p => /Comedor|comidas|Kiosco/.test(p.subtipo || '') },
-  salud:       { t: 'Salud', pt: p => /Consultorio/.test(p.subtipo || '') },
-  bibliotecas: { t: 'Bibliotecas', pt: p => p.subtipo === 'Biblioteca' },
-  entradas:    { t: 'Entradas', pt: p => p.tipo === 'entrada' },
-  extintores:  { t: 'Extintores', pt: p => p.tipo === 'extintor' },
-  parqueos:    { t: 'Parqueos', zn: 'parqueo', e: '🅿️' },
-  canchas:     { t: 'Canchas', zn: 'cancha', e: '⚽' },
-};
-function marcarCategoria(k) { document.querySelectorAll('.cat').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === k))); }
-function verCategoria(k) {
-  const c = CATS[k], centro = mapa.getCenter();
-  marcarCategoria(k);
-  seleccionar(null);
-  if (c.of) return listaOficinas(OFICINAS.filter(c.of), c.t);
-  const items = c.pt
-    ? PUNTOS.filter(f => c.pt(f.properties)).map(f => ({ f, ll: L.latLng(ll(f)), n: nombrePunto(f.properties), e: emojiPunto(f.properties), s: f.properties.edificio }))
-    : capas.zonas.getLayers().filter(l => l.feature.properties.tipo === c.zn).map(l => ({
-        f: l.feature, ll: l.getBounds().getCenter(), e: c.e, s: m2(l.feature.properties.area_m2),
-        n: (l.feature.properties.nombre || c.t.slice(0, -1)) + (l.feature.properties.detalle ? ` (${l.feature.properties.detalle})` : '') }));
-  items.forEach(x => { x.d = centro.distanceTo(x.ll); });
-  items.sort((a, b) => a.d - b.d);
-  if (!items.length) {
-    mostrar(`<div class="vacio"><span class="grande">${k === 'extintores' ? '🧯' : '🗺️'}</span><b>Aún no hay ${c.t.toLowerCase()} registrados</b><br>
-      <small>${k === 'extintores' ? 'El equipo los agrega con la herramienta de digitalización.' : 'No hay datos de esta categoría.'}</small></div>`);
-    resaltado.clearLayers();
-    return;
-  }
-  mostrar(`<div class="respuesta"><b>${c.t}</b> · ${items.length}<br><small>Ordenados por cercanía al centro del mapa</small></div>
-    <div class="lista">${items.map((x, i) => `<button class="tarjeta" type="button" data-i="${i}">
-      <span class="pin" style="background:var(--fondo);font-size:17px">${x.e}</span>
-      <span class="txt"><b>${esc(x.n)}</b><small>${esc(x.s || 'Ciudad Universitaria')}</small></span>
-      <span class="dist">${mts(x.d)}</span></button>`).join('')}</div>`);
-  resultado.querySelectorAll('.tarjeta[data-i]').forEach(el => el.onclick = () => {
-    const x = items[+el.dataset.i];
-    resaltado.clearLayers();
-    if (c.zn) L.geoJSON(x.f, { style: { color: '#1d4f91', weight: 3, fillOpacity: .15 } }).addTo(resaltado);
-    else L.marker(x.ll, { icon: iconoPunto(x.f.properties, true), interactive: false }).addTo(resaltado);
-    centrar(x.ll);
-  });
-  marcar(items.map(x => x.ll));
-}
-document.querySelectorAll('.cat').forEach(b => b.onclick = () => {
-  if (b.getAttribute('aria-pressed') === 'true') { marcarCategoria(null); inicio(); return; }
-  verCategoria(b.dataset.cat);
-});
-// Al volver al inicio se desmarca la categoría
-const _inicio = inicio;
-inicio = function () { marcarCategoria(null); _inicio(); };
 
 // ---------------------------------------------------------------- ficha de un lugar del campus
 function verPunto(f) {

@@ -17,7 +17,7 @@ const MOVIL = () => innerWidth <= 640;
 const SIN_MOV = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Espacio que tapa la interfaz, para encuadrar el mapa en la parte visible
 function margenes() {
-  if (MOVIL()) return { tl: [16, 130], br: [16, $('panel').getBoundingClientRect().height + 16] };
+  if (MOVIL()) return { tl: [16, 76], br: [16, $('panel').getBoundingClientRect().height + 16] };
   return { tl: [$('panel').getBoundingClientRect().right + 24, 24], br: [24, 24] };
 }
 function irA(latlng, zoom) { SIN_MOV ? mapa.setView(latlng, zoom) : mapa.flyTo(latlng, zoom, { duration: .6 }); }
@@ -97,7 +97,7 @@ const capas = {
   }),
   vias: L.geoJSON(null, {
     pane: 'vias',
-    style: f => { const [c, , w] = SIM.via[f.properties.tipo] || ['#999', '', 2]; return { color: c, weight: w, opacity: .9, dashArray: f.properties.tipo === 'sendero' ? '4 3' : null }; },
+    style: f => { const [c, , w] = SIM.via[f.properties.tipo] || ['#999', '', 2]; return { color: c, weight: w, opacity: .55, dashArray: f.properties.tipo === 'sendero' ? '4 3' : null }; },
     onEachFeature: (f, l) => l.bindTooltip(`${SIM.via[f.properties.tipo]?.[1] || 'Vía'}${f.properties.nombre ? ': ' + f.properties.nombre : ''} · ${Math.round(f.properties.longitud_m)} m`),
   }),
   puntos: L.geoJSON(null, {
@@ -110,7 +110,12 @@ const capas = {
   }),
 };
 const resaltado = L.layerGroup().addTo(mapa);
-const etiquetasSegunZoom = () => mapa.getContainer().classList.toggle('sin-etiquetas', mapa.getZoom() < 17);
+const etiquetasSegunZoom = () => {
+  mapa.getContainer().classList.toggle('sin-etiquetas', mapa.getZoom() < 17);
+  // Servicios y entradas son contexto: solo aparecen al acercarse, para que el mapa destaque las oficinas
+  if (mapa.getZoom() >= 18) { if (!mapa.hasLayer(capas.puntos)) capas.puntos.addTo(mapa); }
+  else if (mapa.hasLayer(capas.puntos)) mapa.removeLayer(capas.puntos);
+};
 mapa.on('zoomend', etiquetasSegunZoom);
 Object.values(capas).forEach(c => c.addTo(mapa));
 L.control.layers({ 'Mapa suave': claro, 'Mapa a color': osm, 'Satélite': sat }, {
@@ -267,12 +272,7 @@ function miUbicacion() {
 async function buscar(t) {
   $('texto').value = t; $('limpiar').hidden = !t;
   const r = await api('/api/oficinas' + (t ? '?texto=' + encodeURIComponent(t) : ''));
-  // También busca en baños, comedores, entradas, extintores…
-  const q = sinTilde(t);
-  const pts = q ? PUNTOS.filter(f => sinTilde(`${f.properties.nombre || ''} ${f.properties.subtipo || ''} ${f.properties.tipo}`).includes(q.replace(/s$/, ''))) : [];
-  const extra = pts.length ? `<h3>Lugares del campus</h3><ul>${pts.slice(0, 12).map(f => `<li>${esc(nombrePunto(f.properties))}</li>`).join('')}</ul>` : '';
-  listaOficinas(r.features, t ? `Resultados para "${t}"` : 'Todas las oficinas', extra);
-  if (!r.features.length && pts.length) marcar(pts.slice(0, 12).map(ll));
+  listaOficinas(r.features, t ? `Resultados para "${t}"` : 'Todas las oficinas');
 }
 $('buscar').onsubmit = e => { e.preventDefault(); buscar($('texto').value.trim()); };
 document.querySelectorAll('.acceso[data-q]').forEach(b => b.onclick = () => buscar(b.dataset.q));

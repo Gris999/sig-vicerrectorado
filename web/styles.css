@@ -254,6 +254,15 @@ table.descargas a:hover{background:var(--azul-100)}
 @keyframes pulso{50%{opacity:.3}}
 .yo{width:18px;height:18px;border-radius:50%;background:#1a73e8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(26,115,232,.25),0 1px 3px rgba(0,0,0,.4)}
 
+/* guía de inicio */
+.bienvenida{background:linear-gradient(135deg,var(--azul-700),var(--azul-900));color:#fff;border-radius:var(--r-l);padding:16px;margin-bottom:20px}
+.bienvenida h2{font-size:17px;font-weight:700;letter-spacing:-.2px;margin-bottom:12px;color:#fff}
+.pasos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.pasos li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.4;color:#dbe7fb}
+.pasos li b{color:#fff;font-weight:600}
+.pasos span{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-weight:700;font-size:12.5px;color:#fff}
+.buscador input::placeholder{color:var(--tenue)}
+
 /* ---------- tableta (641–1024 px) ---------- */
 @media (max-width:1024px) and (min-width:641px){
   :root{--panel:340px}
@@ -280,8 +289,8 @@ table.descargas a:hover{background:var(--azul-100)}
   .segmentos{margin:0 12px;border-bottom:1px solid var(--linea)}
   .cuerpo{padding:14px 12px}
   .pie{display:none}
-  .leaflet-top.leaflet-left{left:0;top:118px}
-  .leaflet-top.leaflet-right{top:118px}
+  .leaflet-top.leaflet-left{left:0;top:66px}
+  .leaflet-top.leaflet-right{top:66px}
   .leaflet-bottom{bottom:calc(var(--alto-hoja) + 6px);transition:bottom .28s}
   .leyenda{max-height:40vh}
   .accesos{grid-template-columns:repeat(3,1fr);gap:6px}
