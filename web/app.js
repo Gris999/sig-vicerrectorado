@@ -11,14 +11,47 @@ const SIM = {
 };
 const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').replace(/ \(.*\)$/, '').split(',')[0].slice(0, 24);
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
+const corto = p => (p.sigla || p.nombre.replace(/\s*\(.*\)\s*/g, '').replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').split(/[ ,]+/).filter(w => w.length > 2).map(w => w[0]).join('')).slice(0, 5).toUpperCase();
+const MARCAS = {};
+function iconoPin(p, sel = false) {
+  const c = color('oficina', p.clasificacion);
+  return L.divIcon({ className: '', iconSize: [34, 42], iconAnchor: [17, 41], tooltipAnchor: [14, -26],
+    html: `<div class="pin-of${sel ? ' sel' : ''}"><svg viewBox="0 0 34 42"><path d="M17 1.5C8.4 1.5 1.5 8.3 1.5 16.7 1.5 28 17 40.5 17 40.5s15.5-12.5 15.5-23.8C32.5 8.3 25.6 1.5 17 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/></svg><span${corto(p).length > 4 ? ' class="xs"' : ''}>${esc(corto(p))}</span></div>` });
+}
+let SELECCION = null;
+function seleccionar(id) {
+  if (SELECCION && MARCAS[SELECCION]) MARCAS[SELECCION].setIcon(iconoPin(MARCAS[SELECCION].feature.properties));
+  SELECCION = id;
+  if (id && MARCAS[id]) { MARCAS[id].setIcon(iconoPin(MARCAS[id].feature.properties, true)); MARCAS[id].setZIndexOffset(1000); }
+}
+
+// ---------------------------------------------------------------- iconos
+const IC = {
+  volver: 'M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z',
+  chev: 'M8.6 16.6 13.2 12 8.6 7.4 10 6l6 6-6 6z',
+  pin: 'M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z',
+  reloj: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7z',
+  persona: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z',
+  tel: 'M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z',
+  correo: 'M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z',
+  web: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15.7 15.7 0 0 0-1.4-3.6A8 8 0 0 1 18.9 8zM12 4c.8 1.2 1.5 2.5 1.9 4h-3.8c.4-1.4 1.1-2.8 1.9-4zM4.3 14a8 8 0 0 1 0-4h3.4a16.5 16.5 0 0 0 0 4zm.8 2h2.9c.3 1.3.8 2.5 1.4 3.6A8 8 0 0 1 5.1 16zM8 8H5.1a8 8 0 0 1 4.3-3.6C8.8 5.5 8.3 6.7 8 8zm4 12c-.8-1.2-1.5-2.5-1.9-4h3.8c-.4 1.4-1.1 2.8-1.9 4zm2.3-6H9.7a14.7 14.7 0 0 1 0-4h4.6a14.7 14.7 0 0 1 0 4zm.3 5.6c.6-1.1 1.1-2.3 1.4-3.6h2.9a8 8 0 0 1-4.3 3.6zm1.8-5.6a16.5 16.5 0 0 0 0-4h3.4a8 8 0 0 1 0 4z',
+  caminar: 'M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5 5 0 0 1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5.1-.8.1L6 8.3V13h2V9.6z',
+  compartir: 'M18 16a3 3 0 0 0-2.4 1.2l-7-4a3 3 0 0 0 0-2.4l7-4A3 3 0 1 0 15 5c0 .2 0 .4.1.6l-7 4a3 3 0 1 0 0 4.8l7 4c-.1.2-.1.4-.1.6a3 3 0 1 0 3-3z',
+  edificio: 'M12 7V3H2v18h20V7zM6 19H4v-2h2zm0-4H4v-2h2zm0-4H4V9h2zm0-4H4V5h2zm4 12H8v-2h2zm0-4H8v-2h2zm0-4H8V9h2zm0-4H8V5h2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8zm-2-8h-2v2h2zm0 4h-2v2h2z',
+};
+const svg = (n, cls = '') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${IC[n]}"/></svg>`;
+const toast = msg => { const t = $('toast'); t.textContent = msg; t.classList.add('ver'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('ver'), 2200); };
 
 // ---------------------------------------------------------------- mapa base
-const mapa = L.map('mapa', { zoomSnap: 0.5 }).setView([-17.7765, -63.1945], 16);
-const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(mapa);
+const mapa = L.map('mapa', { zoomSnap: 0.5, zoomControl: false }).setView([-17.7765, -63.1945], 16);
+L.control.zoom({ position: 'topleft', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(mapa);
+// Mapa base OSM atenuado con CSS para que resalten nuestras capas (sin claves de API)
+const claro = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19, className: 'base-suave', attribution: '© OpenStreetMap contributors' }).addTo(mapa);
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19, attribution: '© OpenStreetMap contributors' });
 const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 20, maxNativeZoom: 19, attribution: 'Imágenes © Esri' });
 L.control.scale({ imperial: false, maxWidth: 150 }).addTo(mapa);
 const norte = L.control({ position: 'topleft' });
-norte.onAdd = () => Object.assign(L.DomUtil.create('div', 'norte'), { innerHTML: '↑<small>N</small>', title: 'Norte' });
+norte.onAdd = () => Object.assign(L.DomUtil.create('div', 'norte'), { innerHTML: '<div><svg viewBox="0 0 24 24"><path d="M12 2 5 20l7-4 7 4z"/></svg>N</div>', title: 'Norte' });
 norte.addTo(mapa);
 ['load', 'resize'].forEach(ev => window.addEventListener(ev, () => mapa.invalidateSize()));
 
@@ -49,13 +82,15 @@ const capas = {
     onEachFeature: (f, l) => l.bindTooltip(nombrePunto(f.properties)),
   }),
   oficinas: L.geoJSON(null, {
-    pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 10, color: '#fff', weight: 2.5, fillColor: color('oficina', f.properties.clasificacion), fillOpacity: 1 }),
-    onEachFeature: (f, l) => { l.bindTooltip(etiqueta(f.properties), { permanent: true, direction: 'right', className: 'lbl' }); l.on('click', () => verOficina(f.properties.id)); },
+    pointToLayer: (f, ll) => L.marker(ll, { icon: iconoPin(f.properties), riseOnHover: true, title: f.properties.nombre, keyboard: true }),
+    onEachFeature: (f, l) => { l.bindTooltip(etiqueta(f.properties), { permanent: true, direction: 'right', className: 'lbl', offset: [2, 0] }); l.on('click', () => verOficina(f.properties.id)); MARCAS[f.properties.id] = l; },
   }),
 };
 const resaltado = L.layerGroup().addTo(mapa);
+const etiquetasSegunZoom = () => mapa.getContainer().classList.toggle('sin-etiquetas', mapa.getZoom() < 17);
+mapa.on('zoomend', etiquetasSegunZoom);
 Object.values(capas).forEach(c => c.addTo(mapa));
-L.control.layers({ 'Mapa': osm, 'Satélite': sat }, {
+L.control.layers({ 'Mapa suave': claro, 'Mapa a color': osm, 'Satélite': sat }, {
   'Oficinas del Vicerrectorado': capas.oficinas, 'Entradas, extintores y servicios': capas.puntos,
   'Senderos y vías internas': capas.vias, 'Edificios': capas.edificios, 'Campus, canchas, jardines y parqueos': capas.zonas,
 }, { collapsed: true }).addTo(mapa);
@@ -64,7 +99,7 @@ const leyenda = L.control({ position: 'bottomright' });
 leyenda.onAdd = () => {
   const d = L.DomUtil.create('div', 'leyenda');
   const items = (g, cls) => Object.values(SIM[g]).map(([c, t]) => `<div><span class="sim ${cls}" style="${cls === 'ln' ? 'border-color' : 'background'}:${c}"></span>${t}</div>`).join('');
-  d.innerHTML = `<details ${innerWidth > 1100 ? 'open' : ''}><summary><b style="display:inline">LEYENDA</b></summary><b>Oficinas</b>${items('oficina', 'pt')}<b>Puntos de interés</b>${items('punto', 'pt')}<b>Caminos</b>${items('via', 'ln')}<b>Áreas</b>${items('edificio', 'pg')}${items('zona', 'pg')}<div style="margin-top:4px;color:#666">WGS 84 · EPSG:4326</div></details>`;
+  d.innerHTML = `<details><summary>Leyenda</summary><div class="items"><b>Oficinas</b>${items('oficina', 'pt')}<b>Puntos de interés</b>${items('punto', 'pt')}<b>Caminos</b>${items('via', 'ln')}<b>Áreas</b>${items('edificio', 'pg')}${items('zona', 'pg')}<div style="margin-top:6px;color:#9ca3af">WGS 84 · EPSG:4326</div></div></details>`;
   L.DomEvent.disableScrollPropagation(d); L.DomEvent.disableClickPropagation(d);
   return d;
 };
@@ -89,56 +124,63 @@ const resultado = $('resultado');
 function mostrar(html) {
   mostrarTab('inicio');
   $('portada').hidden = true;
-  resultado.innerHTML = `<button class="volver" type="button">← Volver</button>` + html;
+  resultado.innerHTML = `<button class="volver" type="button">${svg('volver')}Volver</button>` + html;
+  abrirHoja();
   resultado.querySelector('.volver').onclick = inicio;
   resultado.querySelectorAll('[data-oficina]').forEach(el => el.onclick = () => verOficina(+el.dataset.oficina));
-  $('panel').scrollTop = 0;
+  $('cuerpo').scrollTop = 0;
 }
 function inicio() {
-  resultado.innerHTML = ''; $('portada').hidden = false; resaltado.clearLayers();
+  resultado.innerHTML = ''; $('portada').hidden = false; resaltado.clearLayers(); seleccionar(null);
   history.replaceState(null, '', location.pathname);
 }
 function etiquetaZona(p) { return `${SIM.zona[p.tipo]?.[1] || p.tipo}${p.nombre ? ': ' + p.nombre : ''}${p.detalle ? ' (' + p.detalle + ')' : ''} · ${m2(p.area_m2)}`; }
 function marcar(lls, opts = {}) {
   resaltado.clearLayers();
-  lls.forEach(ll => L.circleMarker(ll, { radius: 17, color: '#e74c3c', weight: 3, fill: false }).addTo(resaltado));
-  if (lls.length && !opts.noZoom) mapa.fitBounds(L.latLngBounds(lls).pad(.6), { maxZoom: 18 });
+  lls.forEach(ll => L.circleMarker(ll, { radius: 7, color: '#fff', weight: 0, fillColor: '#1d4f91', fillOpacity: .25, interactive: false }).addTo(resaltado));
+  if (lls.length && !opts.noZoom) mapa.fitBounds(L.latLngBounds(lls).pad(.3), { maxZoom: 18, paddingTopLeft: [innerWidth > 760 ? 440 : 20, 20], paddingBottomRight: [20, innerWidth > 760 ? 20 : innerHeight * .5] });
 }
 const ll = f => [f.geometry.coordinates[1], f.geometry.coordinates[0]];
 
 // Tarjeta corta (listas) y ficha completa (detalle)
 function tarjeta(p) {
+  const sub = p.tramites ? p.tramites.split(';')[0] : (p.funcion || '');
   return `<button class="tarjeta" type="button" data-oficina="${p.id}">
-    <span class="punto" style="background:${color('oficina', p.clasificacion)}"></span>
-    <span><b>${esc(p.nombre)}</b>${p.sigla ? ` <small>(${esc(p.sigla)})</small>` : ''}<br>
-    <small>${esc(p.tramites ? p.tramites.split(';')[0] : p.funcion || '')}${p.distancia_m != null ? ' · ' + mts(p.distancia_m) : ''}</small></span></button>`;
+    <span class="pin" style="background:${color('oficina', p.clasificacion)}">${esc(corto(p))}</span>
+    <span class="txt"><b>${esc(p.nombre)}</b><small>${esc(sub)}</small></span>
+    ${p.distancia_m != null ? `<span class="dist">${mts(p.distancia_m)}</span>` : svg('chev', 'chev')}</button>`;
 }
 function ficha(p, cercanos = '') {
-  const fila = (k, v) => v ? `<dt>${k}</dt><dd>${v}</dd>` : '';
-  const tramites = p.tramites ? '<ul>' + p.tramites.split(';').map(t => `<li>${esc(t.trim())}</li>`).join('') + '</ul>' : '';
-  const donde = [p.edificio, p.piso].filter(Boolean).map(esc).join(' · ') || (p.metodo_captura?.match(/\((.*)\)/)?.[1] ? esc(p.metodo_captura.match(/\((.*)\)/)[1]) : 'Ver en el mapa');
+  const dato = (ic, k, v) => `<li>${svg(ic)}<span><span class="k">${k}</span><span class="v">${v || '<span class="falta">Sin dato aún</span>'}</span></span></li>`;
+  const tramites = p.tramites ? `<div class="seccion-f"><h3>¿Qué trámites hago aquí?</h3><div class="tramites">${p.tramites.split(';').map(t => `<span class="tramite">${esc(t.trim())}</span>`).join('')}</div></div>` : '';
+  const dir = p.metodo_captura?.match(/\((.*)\)/)?.[1];
+  const donde = [p.edificio, p.piso].filter(Boolean).map(esc).join(' · ') || (dir ? esc(dir) : '');
   const ruta = `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=walking`;
+  const tipoC = color('oficina', p.clasificacion);
   return `<article class="ficha">
-    <p class="sub">${esc(p.depende_de ? p.depende_de + ' › ' : '')}${esc(p.dependencia)}</p>
-    <h2>${esc(p.nombre)}${p.sigla ? ' <small>(' + esc(p.sigla) + ')</small>' : ''}</h2>
-    ${p.verificado ? '<span class="badge ok">✔ Ubicación verificada</span>' : '<span class="badge">Ubicación por confirmar en campo</span>'}
-    ${p.funcion ? `<p>${esc(p.funcion)}</p>` : ''}
-    ${tramites ? `<h3>¿Qué trámites hago aquí?</h3>${tramites}` : ''}
-    <dl>${fila('📍 Dónde', donde)}${fila('🕒 Horario', esc(p.horario) || '<span class="falta">Sin dato aún</span>')}
-    ${fila('👤 Responsable', esc([p.responsable, p.cargo_responsable].filter(Boolean).join(', ')) || '<span class="falta">Sin dato aún</span>')}
-    ${fila('📞 Teléfono', p.telefono ? `<a href="tel:${esc(p.telefono.replace(/\s/g, ''))}">${esc(p.telefono)}</a>` : '')}
-    ${fila('✉️ Correo', p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : '')}
-    ${fila('🌐 Web', p.web ? `<a href="${esc(p.web)}" target="_blank" rel="noopener">uagrm.edu.bo</a>` : '')}</dl>
-    <div class="acciones-ficha">
-      <a class="boton" href="${ruta}" target="_blank" rel="noopener">🚶 Cómo llegar</a>
-      <button type="button" class="boton secundario" id="btn-compartir">🔗 Compartir</button>
+    <p class="ruta">${esc(p.depende_de ? p.depende_de + ' › ' : '')}${esc(p.dependencia)}</p>
+    <h2>${esc(p.nombre)}${p.sigla ? ` <small>${esc(p.sigla)}</small>` : ''}</h2>
+    <div class="etiquetas"><span class="etq"><i style="background:${tipoC}"></i>${esc(SIM.oficina[p.clasificacion]?.[1] || p.clasificacion_nombre)}</span>
+      ${p.verificado ? '<span class="etq ok">✓ Verificada en campo</span>' : '<span class="etq pend">Ubicación por confirmar</span>'}</div>
+    <div class="acciones">
+      <a class="accion principal" href="${ruta}" target="_blank" rel="noopener">${svg('caminar')}Cómo llegar</a>
+      <a class="accion" ${p.telefono ? `href="tel:${esc(p.telefono.replace(/\s/g, ''))}"` : 'aria-disabled="true"'}>${svg('tel')}Llamar</a>
+      <button type="button" class="accion" id="btn-compartir">${svg('compartir')}Compartir</button>
     </div>
-    ${cercanos}
-    <details class="tec"><summary>Datos técnicos (SIG)</summary><dl>
-      ${fila('Código', esc(p.codigo))}${fila('Clasificación', esc(p.clasificacion_nombre))}
-      ${fila('Coordenadas', `${p.lat}, ${p.lon} (WGS 84)`)}${fila('Precisión', `±${p.precision_m ?? '?'} m`)}
-      ${fila('Fuente', esc(p.metodo_captura))}${fila('Fecha', esc(p.fecha_captura))}
-      ${p.alcance === 'condicional' ? fila('Alcance', 'A confirmar con el docente (cruce con otro tema)') : ''}</dl></details>
+    ${p.funcion ? `<p class="desc">${esc(p.funcion)}</p>` : ''}
+    <ul class="datos">
+      ${dato('pin', 'Dónde', donde)}${dato('reloj', 'Horario de atención', esc(p.horario))}
+      ${dato('persona', 'Responsable', esc([p.responsable, p.cargo_responsable].filter(Boolean).join(' · ')))}
+      ${p.telefono ? dato('tel', 'Teléfono', `<a href="tel:${esc(p.telefono.replace(/\s/g, ''))}">${esc(p.telefono)}</a>`) : ''}
+      ${p.email ? dato('correo', 'Correo', `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`) : ''}
+      ${p.web ? dato('web', 'Sitio web', `<a href="${esc(p.web)}" target="_blank" rel="noopener">uagrm.edu.bo</a>`) : ''}
+    </ul>
+    ${tramites}${cercanos}
+    <div class="seccion-f"><details class="tec"><summary>Datos técnicos (SIG)</summary><dl>
+      <dt>Código</dt><dd>${esc(p.codigo)}</dd><dt>Clasificación</dt><dd>${esc(p.clasificacion_nombre)}</dd>
+      <dt>Coordenadas</dt><dd>${p.lat}, ${p.lon} (WGS 84)</dd><dt>Precisión</dt><dd>±${p.precision_m ?? '?'} m</dd>
+      <dt>Fuente</dt><dd>${esc(p.metodo_captura)}</dd><dt>Fecha</dt><dd>${esc(p.fecha_captura)}</dd>
+      ${p.alcance === 'condicional' ? '<dt>Alcance</dt><dd>A confirmar con el docente</dd>' : ''}</dl></details></div>
   </article>`;
 }
 
@@ -147,27 +189,31 @@ async function verOficina(id) {
   if (modoEdicion) return editarOficina(id);
   const [f, cerca] = await Promise.all([api(`/api/oficinas/${id}`), api(`/api/oficinas/${id}/servicios-cercanos?n=30`)]);
   const primero = t => cerca.features.find(x => x.properties.tipo === t || x.properties.subtipo === t);
-  const items = [['entrada', '🚪 Entrada más cercana'], ['Baños', '🚻 Baño más cercano'], ['extintor', '🧯 Extintor más cercano']].map(([t, n]) => {
+  const items = [['entrada', '🚪', 'Entrada'], ['Baños', '🚻', 'Baño'], ['extintor', '🧯', 'Extintor']].map(([t, e, n]) => {
     const x = primero(t);
-    return `<li>${n}: ${x ? `<b>${esc(x.properties.nombre)}</b> a ${mts(x.properties.distancia_m)}` : '<span class="falta">sin registro aún</span>'}</li>`;
+    return `<li><span class="e">${e}</span><b>${x ? mts(x.properties.distancia_m) : '—'}</b>${n}${x ? '' : ' · sin dato'}</li>`;
   }).join('');
-  mostrar(ficha(f.properties, `<h3>Cerca de esta oficina</h3><ul class="cerca">${items}</ul>`));
+  mostrar(ficha(f.properties, `<div class="seccion-f"><h3>Lo más cercano a esta oficina</h3><ul class="cerca">${items}</ul></div>`));
+  seleccionar(id);
   $('btn-compartir').onclick = async () => {
     const url = `${location.origin}/?oficina=${id}`;
-    try { await navigator.clipboard.writeText(url); $('btn-compartir').textContent = '✔ Enlace copiado'; } catch (_) { prompt('Copia este enlace:', url); }
+    if (navigator.share) { try { await navigator.share({ title: f.properties.nombre, url }); return; } catch (_) {} }
+    try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); } catch (_) { prompt('Copia este enlace:', url); }
   };
   history.replaceState(null, '', `?oficina=${id}`);
-  marcar([ll(f)]);
+  resaltado.clearLayers();
+  mapa.flyTo(ll(f), Math.max(mapa.getZoom(), 18), { duration: .6 });
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
     L.polyline([ll(f), ll(x)], { color: '#e74c3c', weight: 2, dashArray: '4 4' }).addTo(resaltado));
 }
 
 function listaOficinas(feats, titulo, extra = '') {
   if (!feats.length && !extra) {
-    mostrar(`<div class="respuesta">${esc(titulo)}: <b>no encontramos resultados</b>.<br><small>Prueba con otra palabra, por ejemplo "título", "becas" o el nombre de la oficina.</small></div>`);
+    mostrar(`<div class="vacio"><span class="grande">🔍</span><b>Sin resultados</b><br>${esc(titulo)}<br><small>Prueba con "título", "becas", "kardex" o el nombre de la oficina.</small></div>`);
     resaltado.clearLayers(); return;
   }
-  mostrar(`<div class="respuesta">${esc(titulo)}${feats.length ? `: <b>${feats.length}</b>` : ''}</div>${extra}` + feats.map(f => tarjeta(f.properties)).join(''));
+  mostrar(`<div class="respuesta"><b>${esc(titulo)}</b>${feats.length ? ` · ${feats.length} oficina${feats.length > 1 ? 's' : ''}` : ''}</div>${extra}` + (feats.length ? `<div class="lista">${feats.map(f => tarjeta(f.properties)).join('')}</div>` : ''));
+  seleccionar(null);
   if (feats.length) marcar(feats.map(ll));
 }
 
@@ -177,7 +223,7 @@ async function verContenido(capa, f) {
   const p = r.poligono;
   const clase = capa === 'edificio' ? (SIM.edificio[p.clase]?.[1] || p.clase) : (SIM.zona[p.clase]?.[1] || p.clase);
   let html = `<div class="respuesta"><b>${esc(p.nombre || clase)}</b><br><small>${esc(clase)} · superficie ${m2(p.area_m2)}</small></div>`;
-  html += r.oficinas.features.length ? '<h3>Oficinas del Vicerrectorado aquí</h3>' + r.oficinas.features.map(o => tarjeta(o.properties)).join('')
+  html += r.oficinas.features.length ? '<h4 class="titulo-seccion">Oficinas del Vicerrectorado aquí</h4><div class="lista">' + r.oficinas.features.map(o => tarjeta(o.properties)).join('') + '</div>'
     : '<p class="ayuda">Aquí no hay oficinas del Vicerrectorado.</p>';
   if (r.puntos.features.length) html += `<h3>También aquí</h3><ul>${r.puntos.features.map(x => `<li>${esc(nombrePunto(x.properties))}</li>`).join('')}</ul>`;
   if (r.edificios.length) html += `<h3>Edificios dentro (${r.edificios.length})</h3><ul>${r.edificios.map(e => `<li>${esc(e.nombre)} · ${m2(e.area_m2)}</li>`).join('')}</ul>`;
@@ -196,7 +242,7 @@ function miUbicacion() {
 }
 
 async function buscar(t) {
-  $('texto').value = t;
+  $('texto').value = t; $('limpiar').hidden = !t;
   const r = await api('/api/oficinas' + (t ? '?texto=' + encodeURIComponent(t) : ''));
   // También busca en baños, comedores, entradas, extintores…
   const q = sinTilde(t);
@@ -206,7 +252,7 @@ async function buscar(t) {
   if (!r.features.length && pts.length) marcar(pts.slice(0, 12).map(ll));
 }
 $('buscar').onsubmit = e => { e.preventDefault(); buscar($('texto').value.trim()); };
-document.querySelectorAll('.chip[data-q]').forEach(b => b.onclick = () => buscar(b.dataset.q));
+document.querySelectorAll('.acceso[data-q]').forEach(b => b.onclick = () => buscar(b.dataset.q));
 
 $('btn-cercana').onclick = async () => {
   const u = await miUbicacion();
@@ -217,7 +263,7 @@ $('btn-cercana').onclick = async () => {
   L.marker(u).addTo(resaltado).bindTooltip(u.aprox ? 'Centro del mapa' : 'Estás aquí').openTooltip();
   if (f) L.polyline([[u.lat, u.lng], ll(f)], { color: '#1d4f91', dashArray: '6 4' }).addTo(resaltado);
 };
-document.querySelectorAll('#radios .chip').forEach(b => b.onclick = async () => {
+document.querySelectorAll('#radios .pastilla').forEach(b => b.onclick = async () => {
   const u = await miUbicacion(), m = +b.dataset.m;
   const r = await api(`/api/radio?lat=${u.lat}&lon=${u.lng}&metros=${m}`);
   const cuenta = {};
@@ -251,11 +297,28 @@ function pintarDirectorio(deps) {
   const grupos = deps.filter(d => d.nivel <= 1).map(d => {
     const hijos = new Set([d.id, ...deps.filter(x => x.padre_id === d.id && x.nivel === 2).map(x => x.id)]);
     const ofs = OFICINAS.filter(f => hijos.has(f.properties.dependencia_id));
-    return ofs.length ? `<details ${d.nivel === 0 ? 'open' : ''}><summary>${esc(d.sigla ? d.sigla + ' · ' : '')}${esc(d.nombre)} <small>(${ofs.length})</small></summary>${ofs.map(f => tarjeta(f.properties)).join('')}</details>` : '';
+    return ofs.length ? `<div class="grupo-dir"><h4>${esc(d.nombre)} <small>${ofs.length}</small></h4><div class="lista">${ofs.map(f => tarjeta(f.properties)).join('')}</div></div>` : '';
   }).join('');
+  $('cuenta').textContent = OFICINAS.length;
   $('directorio').innerHTML = grupos;
   $('directorio').querySelectorAll('[data-oficina]').forEach(el => el.onclick = () => verOficina(+el.dataset.oficina));
 }
+
+// ---------------------------------------------------------------- hoja inferior (móvil)
+const hoja = $('panel');
+function abrirHoja() { if (innerWidth <= 760) { hoja.classList.remove('baja'); hoja.classList.add('alta'); } }
+$('asa').onclick = () => {
+  if (hoja.classList.contains('alta')) hoja.classList.replace('alta', 'baja');
+  else if (hoja.classList.contains('baja')) hoja.classList.remove('baja');
+  else hoja.classList.add('alta');
+  setTimeout(() => mapa.invalidateSize(), 260);
+};
+mapa.on('dragstart', () => { if (innerWidth <= 760 && hoja.classList.contains('alta')) hoja.classList.remove('alta'); });
+$('texto').addEventListener('input', () => { $('limpiar').hidden = !$('texto').value; });
+$('limpiar').onclick = () => { $('texto').value = ''; $('limpiar').hidden = true; inicio(); $('texto').focus(); };
+document.querySelectorAll('.pastilla').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.pastilla').forEach(x => x.classList.toggle('activa', x === b));
+}));
 
 // ---------------------------------------------------------------- pestañas
 function mostrarTab(t) {
@@ -270,7 +333,12 @@ $('link-equipo').onclick = e => { e.preventDefault(); mostrarTab('equipo'); };
 // ---------------------------------------------------------------- tabla de infraestructura
 async function cargarTabla() {
   const [inf, of] = await Promise.all([api('/api/infraestructura'), api('/api/oficinas')]);
-  $('resumen').innerHTML = `<p class="ayuda">Unidades del Vicerrectorado ubicadas: <b>${inf.cobertura.ubicadas} de ${inf.cobertura.unidades}</b>.</p>
+  const verif = of.features.filter(f => f.properties.verificado).length;
+  const tot = k => inf.resumen.filter(r => r.capa === k).reduce((a, r) => a + (r.total || 0), 0);
+  $('kpis').innerHTML = `<div class="kpi"><b>${inf.cobertura.ubicadas}/${inf.cobertura.unidades}</b><span>unidades ubicadas</span></div>
+    <div class="kpi"><b>${verif}/${of.features.length}</b><span>verificadas en campo</span></div>
+    <div class="kpi"><b>${((tot('Senderos') + tot('Vías internas')) / 1000).toFixed(1).replace('.', ',')} km</b><span>de caminos</span></div>`;
+  $('resumen').innerHTML = `
     <table><tr><th>Tipo</th><th>Capa</th><th>Cant.</th><th>Total</th></tr>${inf.resumen.map(r =>
       `<tr><td>${r.geometria}</td><td>${esc(r.capa)}</td><td class="num">${r.cantidad}</td><td class="num">${r.total == null ? '—' : Math.round(r.total).toLocaleString('es-BO') + ' ' + r.unidad}</td></tr>`).join('')}</table>`;
   $('tabla-oficinas').innerHTML = `<table><tr><th>Código</th><th>Oficina</th><th>Área</th><th>Edificio</th><th>Lat, Lon</th></tr>${of.features.map(({ properties: p }) =>
@@ -287,7 +355,7 @@ $('btn-imprimir').onclick = () => {
 let modoEdicion = false, modoDig = false, DEPS = [], CLAS = [];
 async function entrar(t, silencioso) {
   TOKEN = t;
-  try { await api('/api/admin/check'); } catch (e) { TOKEN = ''; try { sessionStorage.removeItem('token'); } catch (_) {} if (!silencioso) alert('Token incorrecto'); return; }
+  try { await api('/api/admin/check'); } catch (e) { TOKEN = ''; try { sessionStorage.removeItem('token'); } catch (_) {} if (!silencioso) toast('Token incorrecto'); return; }
   try { sessionStorage.setItem('token', t); } catch (_) {}
   $('login').hidden = true; $('editor').hidden = false; modoEdicion = !$('tab-equipo').hidden;
 }
@@ -310,15 +378,15 @@ async function editarOficina(id) {
     ${campo('funcion', 'Función', 'area')}${campo('tramites', 'Trámites (separados por ;)', 'area')}
     ${campo('responsable', 'Responsable')}${campo('cargo_responsable', 'Cargo')}${campo('piso', 'Piso')}
     ${campo('horario', 'Horario')}${campo('telefono', 'Teléfono')}${campo('email', 'Correo', 'email')}
-    <label><input type="checkbox" name="verificado" ${p.verificado ? 'checked' : ''}> Ubicación verificada en campo</label>
-    <div class="fila"><button>Guardar</button><button type="button" id="btn-mover" class="secundario">Mover en el mapa</button></div>`;
+    <label class="check"><input type="checkbox" name="verificado" ${p.verificado ? 'checked' : ''}> Ubicación verificada en campo</label>
+    <div class="fila"><button class="primario">Guardar</button><button type="button" id="btn-mover" class="secundario">Mover en el mapa</button></div>`;
   f.onsubmit = async e => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(f));
     d.verificado = f.verificado.checked; d.dependencia_id = +d.dependencia_id;
     Object.keys(d).forEach(k => { if (d[k] === '') d[k] = null; });
     await api(`/api/oficinas/${id}`, { method: 'PATCH', body: JSON.stringify(d) });
-    await recargar(); alert('Guardado');
+    await recargar(); toast('Cambios guardados');
   };
   $('btn-mover').onclick = () => esperarClic(async ll => {
     await api(`/api/oficinas/${id}/ubicacion?lat=${ll.lat}&lon=${ll.lng}`, { method: 'PATCH' });
@@ -333,21 +401,21 @@ function esperarClic(cb) {
 }
 $('btn-digitalizar').onclick = () => {
   const tipo = $('dig-tipo').value;
-  $('dig-form').innerHTML = '<p class="ayuda">Haz clic en el mapa donde está el elemento…</p>';
+  $('dig-form').innerHTML = '<p class="nota">Toca el mapa donde está el elemento…</p>';
   esperarClic(ll => {
     const esOf = tipo === 'oficina';
-    $('dig-form').innerHTML = `<p class="ayuda">Coordenada: ${ll.lat.toFixed(7)}, ${ll.lng.toFixed(7)}</p>
+    $('dig-form').innerHTML = `<p class="nota">Coordenada: ${ll.lat.toFixed(7)}, ${ll.lng.toFixed(7)}</p>
       <label>Nombre<input id="dig-nombre" style="width:100%" ${esOf ? 'required' : ''}></label>
       ${esOf ? `<label>Dependencia<select id="dig-dep" style="width:100%">${opciones(DEPS, 'id', x => x.nombre)}</select></label>
         <label>Clasificación<select id="dig-clas" style="width:100%">${opciones(CLAS.filter(c => ['DESPACHO', 'DIRECCION', 'ATENCION'].includes(c.codigo)), 'codigo', x => x.nombre, 'ATENCION')}</select></label>`
         : `<label>Detalle<input id="dig-sub" style="width:100%" placeholder="${tipo === 'servicio' ? 'Baños, comedor, consultorio…' : tipo === 'entrada' ? 'puerta / portón' : 'PQS 6 kg'}"></label>`}
-      <button id="dig-guardar" type="button">Guardar</button>`;
+      <button id="dig-guardar" type="button" class="primario">Guardar</button>`;
     const tmp = L.circleMarker(ll, { radius: 9, color: '#e74c3c' }).addTo(resaltado);
     $('dig-guardar').onclick = async () => {
       const nombre = $('dig-nombre').value.trim() || null;
       if (esOf) await api('/api/oficinas', { method: 'POST', body: JSON.stringify({ nombre, dependencia_id: +$('dig-dep').value, clasificacion: $('dig-clas').value, lat: ll.lat, lon: ll.lng }) });
       else await api('/api/puntos', { method: 'POST', body: JSON.stringify({ tipo, subtipo: $('dig-sub').value || null, nombre: nombre || (tipo === 'extintor' ? 'Extintor' : null), lat: ll.lat, lon: ll.lng }) });
-      tmp.remove(); $('dig-form').innerHTML = '<p class="ayuda">✔ Guardado.</p>';
+      tmp.remove(); $('dig-form').innerHTML = ''; toast('Punto guardado');
       await recargar();
     };
   });
@@ -371,8 +439,12 @@ async function recargar() {
   deps.forEach(d => $('filtro-dep').add(new Option('  '.repeat(d.nivel) + d.nombre + (d.sigla ? ` (${d.sigla})` : ''), d.id)));
   clas.filter(c => ['DESPACHO', 'DIRECCION', 'ATENCION'].includes(c.codigo)).forEach(c => $('filtro-clas').add(new Option(c.nombre, c.codigo)));
   mapa.invalidateSize();
+  etiquetasSegunZoom();
   const campus = capas.zonas.getLayers().filter(l => l.feature.properties.tipo === 'campus');
-  mapa.fitBounds(campus.length ? L.featureGroup(campus).getBounds() : capas.edificios.getBounds(), { padding: [10, 10] });
+  const izq = innerWidth > 760 ? 440 : 10, abajo = innerWidth > 760 ? 10 : innerHeight * .46;
+  const marco = campus.length ? L.featureGroup(campus).getBounds() : capas.edificios.getBounds();
+  OFICINAS.forEach(f => { const p = L.latLng(ll(f)); if (marco.pad(.5).contains(p)) marco.extend(p); });
+  mapa.fitBounds(marco, { paddingTopLeft: [izq + 10, 30], paddingBottomRight: [30, abajo + 30] });
   const params = new URLSearchParams(location.search);
   if (params.get('oficina')) verOficina(+params.get('oficina'));
   if (params.has('equipo')) mostrarTab('equipo');

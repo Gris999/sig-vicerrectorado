@@ -2,136 +2,155 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b2e5c">
 <title>¿Dónde queda? · Vicerrectorado UAGRM</title>
-<meta name="description" content="Mapa de las oficinas del Vicerrectorado de la UAGRM: dónde quedan, qué trámites atienden y cómo llegar.">
+<meta name="description" content="Encuentra las oficinas del Vicerrectorado de la UAGRM: dónde quedan, qué trámites atienden y cómo llegar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=0.3.0">
+<link rel="stylesheet" href="/static/styles.css?v=0.4.2">
 </head>
 <body>
-<header>
-  <div class="marca">
-    <h1>¿Dónde queda?</h1>
-    <p>Oficinas del Vicerrectorado · UAGRM</p>
-  </div>
-  <form id="buscar" role="search">
-    <input id="texto" type="search" autocomplete="off" placeholder="Busca una oficina o trámite: título, kardex, becas…" aria-label="Buscar oficina o trámite">
-    <button aria-label="Buscar">Buscar</button>
-  </form>
-</header>
+<div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
 
-<main>
-  <aside id="panel" aria-label="Panel de información">
-    <nav class="tabs" role="tablist">
-      <button class="tab activo" data-tab="inicio" role="tab">Inicio</button>
+<aside id="panel" class="hoja" aria-label="Panel de información">
+  <button class="asa" id="asa" type="button" aria-label="Expandir o contraer panel"><span></span></button>
+
+  <div class="cabecera">
+    <div class="marca">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span>
+      <div>
+        <h1>¿Dónde queda?</h1>
+        <p>Oficinas del Vicerrectorado · UAGRM</p>
+      </div>
+    </div>
+    <form id="buscar" role="search" class="buscador">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+      <input id="texto" type="search" autocomplete="off" placeholder="Busca una oficina o trámite" aria-label="Buscar oficina o trámite">
+      <button id="limpiar" type="button" class="icono" aria-label="Limpiar búsqueda" hidden><svg viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></svg></button>
+    </form>
+    <nav class="segmentos" role="tablist" aria-label="Secciones">
+      <button class="tab activo" data-tab="inicio" role="tab">Explorar</button>
       <button class="tab" data-tab="cerca" role="tab">Cerca de mí</button>
       <button class="tab" data-tab="datos" role="tab">Datos</button>
     </nav>
+  </div>
 
-    <!-- INICIO: buscar y directorio -->
+  <div class="cuerpo" id="cuerpo">
+    <!-- EXPLORAR -->
     <section id="tab-inicio" class="contenido">
       <div id="resultado"></div>
       <div id="portada">
-        <p class="sub">Búsquedas frecuentes</p>
-        <div class="chips">
-          <button class="chip" data-q="título">🎓 Sacar mi título</button>
-          <button class="chip" data-q="kardex">📄 Kardex / notas</button>
-          <button class="chip" data-q="PSA">📝 Admisión (PSA)</button>
-          <button class="chip" data-q="becas">🤝 Becas</button>
-          <button class="chip" data-q="posgrado">🏛️ Posgrado</button>
-          <button class="chip" data-q="vocacional">🧭 Test vocacional</button>
+        <h2 class="titulo-seccion">¿Qué necesitas hacer?</h2>
+        <div class="accesos">
+          <button class="acceso" data-q="título"><span class="ic" style="--c:#c2410c">🎓</span><span>Sacar mi título</span></button>
+          <button class="acceso" data-q="kardex"><span class="ic" style="--c:#1d4ed8">📄</span><span>Kardex y notas</span></button>
+          <button class="acceso" data-q="PSA"><span class="ic" style="--c:#7c3aed">📝</span><span>Admisión (PSA)</span></button>
+          <button class="acceso" data-q="becas"><span class="ic" style="--c:#047857">🤝</span><span>Becas y salud</span></button>
+          <button class="acceso" data-q="posgrado"><span class="ic" style="--c:#0e7490">🏛️</span><span>Posgrado</span></button>
+          <button class="acceso" data-q="vocacional"><span class="ic" style="--c:#be185d">🧭</span><span>Test vocacional</span></button>
         </div>
-        <p class="sub">Todas las oficinas</p>
-        <div id="directorio"></div>
+        <h2 class="titulo-seccion">Todas las oficinas <span id="cuenta" class="contador"></span></h2>
+        <div id="directorio"><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div></div>
       </div>
     </section>
 
-    <!-- CERCA DE MÍ: consultas espaciales con lenguaje simple -->
+    <!-- CERCA DE MÍ -->
     <section id="tab-cerca" class="contenido" hidden>
-      <div class="grupo">
-        <h2>¿Cuál es la oficina más cercana?</h2>
-        <p class="ayuda">Usa el GPS de tu celular. En computadora usa el centro del mapa.</p>
-        <button id="btn-cercana" type="button" class="grande">📍 Buscar la más cercana a mí</button>
-        <details class="tec"><summary>Consulta SIG</summary>Vecino más cercano (KNN) con el operador <code>&lt;-&gt;</code> de PostGIS y distancia geodésica <code>ST_Distance</code>.</details>
-      </div>
-      <div class="grupo">
-        <h2>¿Qué hay a mi alrededor?</h2>
-        <div class="chips" id="radios">
-          <button class="chip" data-m="100">100 m</button>
-          <button class="chip" data-m="200">200 m</button>
-          <button class="chip" data-m="500">500 m</button>
-          <button class="chip" data-m="1000">1 km</button>
+      <div class="tarjeta-accion">
+        <div>
+          <h3>Oficina más cercana</h3>
+          <p>Usa el GPS de tu celular (en computadora, el centro del mapa).</p>
         </div>
-        <details class="tec"><summary>Consulta SIG</summary>Búsqueda por radio con <code>ST_DWithin</code> sobre <code>geography</code> (metros reales).</details>
+        <button id="btn-cercana" type="button" class="primario">Buscar</button>
       </div>
-      <div class="grupo">
-        <h2>¿Qué tan lejos está una oficina de otra?</h2>
-        <div class="fila"><select id="dist-a" aria-label="Desde"></select><span>→</span><select id="dist-b" aria-label="Hasta"></select></div>
-        <button id="btn-dist" type="button">Medir distancia</button>
-        <details class="tec"><summary>Consulta SIG</summary><code>ST_Distance</code> entre dos puntos y <code>ST_MakeLine</code> para dibujar el tramo.</details>
+      <div class="bloque">
+        <h3>¿Qué hay a mi alrededor?</h3>
+        <div class="pastillas" id="radios">
+          <button class="pastilla" data-m="100">100 m</button>
+          <button class="pastilla" data-m="200">200 m</button>
+          <button class="pastilla" data-m="500">500 m</button>
+          <button class="pastilla" data-m="1000">1 km</button>
+        </div>
+        <details class="tec"><summary>Consulta SIG</summary>Vecino más cercano con el operador <code>&lt;-&gt;</code> y radio con <code>ST_DWithin</code> sobre <code>geography</code> (metros reales).</details>
       </div>
-      <div class="grupo">
-        <h2>Ver por área</h2>
-        <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las áreas del Vicerrectorado</option></select>
-        <select id="filtro-clas" aria-label="Filtrar por tipo de oficina"><option value="">Todos los tipos de oficina</option></select>
+      <div class="bloque">
+        <h3>Distancia entre dos oficinas</h3>
+        <label class="campo"><span>Desde</span><select id="dist-a"></select></label>
+        <label class="campo"><span>Hasta</span><select id="dist-b"></select></label>
+        <button id="btn-dist" type="button" class="secundario ancho">Medir distancia</button>
+        <details class="tec"><summary>Consulta SIG</summary><code>ST_Distance</code> geodésica y <code>ST_MakeLine</code> para dibujar el tramo.</details>
+      </div>
+      <div class="bloque">
+        <h3>Filtrar el mapa</h3>
+        <label class="campo"><span>Área</span><select id="filtro-dep"><option value="">Todas las áreas</option></select></label>
+        <label class="campo"><span>Tipo</span><select id="filtro-clas"><option value="">Todos los tipos</option></select></label>
         <details class="tec"><summary>Consulta SIG</summary>Consulta alfanumérica sobre el árbol de dependencias y la clasificación de ambientes.</details>
       </div>
-      <p class="ayuda">Consejo: haz clic en un <b>edificio, cancha o jardín</b> del mapa para ver qué hay dentro y cuánto mide.</p>
+      <p class="nota">Toca un edificio, cancha o jardín en el mapa para ver qué hay dentro y cuánto mide.</p>
     </section>
 
-    <!-- DATOS: tabla de infraestructura, descargas, plano -->
+    <!-- DATOS -->
     <section id="tab-datos" class="contenido" hidden>
-      <h2>Tabla de infraestructura</h2>
-      <div id="resumen"></div>
-      <h3>Oficinas del Vicerrectorado (1)</h3>
-      <div id="tabla-oficinas" class="tabla-scroll"></div>
-      <h3>Descargar los datos</h3>
-      <table class="descargas">
-        <tr><th>Capa</th><th>Excel (CSV)</th><th>GeoJSON</th><th>ArcMap (SHP)</th></tr>
-        <tr><td>Oficinas</td><td><a href="/api/infraestructura.csv?tabla=oficinas">CSV</a></td><td><a href="/api/export/oficinas.geojson" download>GeoJSON</a></td><td><a href="/api/export/oficinas.zip">SHP</a></td></tr>
-        <tr><td>Edificios</td><td><a href="/api/infraestructura.csv?tabla=edificios">CSV</a></td><td><a href="/api/export/edificios.geojson" download>GeoJSON</a></td><td><a href="/api/export/edificios.zip">SHP</a></td></tr>
-        <tr><td>Campus, canchas, jardines</td><td><a href="/api/infraestructura.csv?tabla=zonas">CSV</a></td><td><a href="/api/export/zonas.geojson" download>GeoJSON</a></td><td><a href="/api/export/zonas.zip">SHP</a></td></tr>
-        <tr><td>Senderos y vías</td><td><a href="/api/infraestructura.csv?tabla=vias">CSV</a></td><td><a href="/api/export/vias.geojson" download>GeoJSON</a></td><td><a href="/api/export/vias.zip">SHP</a></td></tr>
-        <tr><td>Entradas, extintores, servicios</td><td><a href="/api/infraestructura.csv?tabla=puntos">CSV</a></td><td><a href="/api/export/puntos.geojson" download>GeoJSON</a></td><td><a href="/api/export/puntos.zip">SHP</a></td></tr>
-      </table>
-      <p class="ayuda">Todo en WGS 84 (EPSG:4326). Datos base © OpenStreetMap contributors.</p>
-      <button id="btn-imprimir" type="button" class="grande">🖨 Imprimir plano digital (PDF)</button>
-      <p class="ayuda"><a href="/docs" target="_blank" rel="noopener">Documentación de la API</a></p>
+      <div id="kpis" class="kpis"></div>
+      <div class="bloque">
+        <h3>Tabla de infraestructura</h3>
+        <div id="resumen"></div>
+      </div>
+      <div class="bloque">
+        <h3>Oficinas del Vicerrectorado (1)</h3>
+        <div id="tabla-oficinas" class="tabla-scroll"></div>
+      </div>
+      <div class="bloque">
+        <h3>Descargar datos</h3>
+        <table class="descargas">
+          <tr><th>Capa</th><th>CSV</th><th>GeoJSON</th><th>SHP</th></tr>
+          <tr><td>Oficinas</td><td><a href="/api/infraestructura.csv?tabla=oficinas">↓</a></td><td><a href="/api/export/oficinas.geojson" download>↓</a></td><td><a href="/api/export/oficinas.zip">↓</a></td></tr>
+          <tr><td>Edificios</td><td><a href="/api/infraestructura.csv?tabla=edificios">↓</a></td><td><a href="/api/export/edificios.geojson" download>↓</a></td><td><a href="/api/export/edificios.zip">↓</a></td></tr>
+          <tr><td>Campus, canchas, jardines</td><td><a href="/api/infraestructura.csv?tabla=zonas">↓</a></td><td><a href="/api/export/zonas.geojson" download>↓</a></td><td><a href="/api/export/zonas.zip">↓</a></td></tr>
+          <tr><td>Senderos y vías</td><td><a href="/api/infraestructura.csv?tabla=vias">↓</a></td><td><a href="/api/export/vias.geojson" download>↓</a></td><td><a href="/api/export/vias.zip">↓</a></td></tr>
+          <tr><td>Entradas, extintores, servicios</td><td><a href="/api/infraestructura.csv?tabla=puntos">↓</a></td><td><a href="/api/export/puntos.geojson" download>↓</a></td><td><a href="/api/export/puntos.zip">↓</a></td></tr>
+        </table>
+        <p class="nota">WGS 84 (EPSG:4326). SHP se abre en ArcMap/QGIS. Datos base © OpenStreetMap contributors.</p>
+      </div>
+      <button id="btn-imprimir" type="button" class="primario ancho">Imprimir plano digital (PDF)</button>
+      <p class="nota centro"><a href="/docs" target="_blank" rel="noopener">Documentación de la API</a></p>
     </section>
 
-    <!-- EQUIPO: digitalización y edición (oculto al público) -->
+    <!-- EQUIPO -->
     <section id="tab-equipo" class="contenido" hidden>
-      <h2>Acceso del equipo</h2>
-      <div id="login">
-        <label for="token">Token de edición</label>
-        <div class="fila"><input id="token" type="password" autocomplete="off"><button id="btn-login" type="button">Entrar</button></div>
-        <p class="ayuda">Solo para el Grupo 16. El token está en el archivo <code>.env</code> del proyecto.</p>
-      </div>
-      <div id="editor" hidden>
-        <h3>Digitalizar un punto nuevo</h3>
-        <div class="fila">
-          <select id="dig-tipo">
-            <option value="oficina">Oficina del Vicerrectorado</option>
-            <option value="extintor">Extintor</option>
-            <option value="entrada">Entrada</option>
-            <option value="servicio">Servicio (baño, comida…)</option>
-          </select>
-          <button id="btn-digitalizar" type="button">✚ Marcar en el mapa</button>
+      <div class="bloque">
+        <h3>Acceso del equipo</h3>
+        <div id="login">
+          <label class="campo"><span>Token de edición</span><input id="token" type="password" autocomplete="off"></label>
+          <button id="btn-login" type="button" class="primario ancho">Entrar</button>
+          <p class="nota">Solo para el Grupo 16. El token está en el archivo <code>.env</code> del proyecto.</p>
         </div>
-        <div id="dig-form"></div>
-        <h3>Editar una oficina</h3>
-        <p class="ayuda">Haz clic en una oficina del mapa para editar su ficha.</p>
-        <form id="edit-form" hidden></form>
-        <button id="btn-salir" type="button" class="secundario">Salir del modo equipo</button>
+        <div id="editor" hidden>
+          <label class="campo"><span>Digitalizar</span>
+            <select id="dig-tipo">
+              <option value="oficina">Oficina del Vicerrectorado</option>
+              <option value="extintor">Extintor</option>
+              <option value="entrada">Entrada</option>
+              <option value="servicio">Servicio (baño, comida…)</option>
+            </select></label>
+          <button id="btn-digitalizar" type="button" class="secundario ancho">Marcar en el mapa</button>
+          <div id="dig-form"></div>
+          <p class="nota">Para editar una oficina, tócala en el mapa.</p>
+          <form id="edit-form" hidden></form>
+          <button id="btn-salir" type="button" class="texto">Salir del modo equipo</button>
+        </div>
       </div>
     </section>
+  </div>
 
-    <footer class="pie">
-      SIG INF442-SA · Grupo 16 · <a href="#" id="link-equipo">Acceso del equipo</a>
-    </footer>
-  </aside>
-  <div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
-</main>
+  <footer class="pie">
+    <span>SIG INF442-SA · Grupo 16</span>
+    <a href="#" id="link-equipo">Acceso del equipo</a>
+  </footer>
+</aside>
 
 <div id="plano-print" aria-hidden="true">
   <div class="cajetin">
@@ -142,7 +161,9 @@
   </div>
 </div>
 
+<div id="toast" role="status" aria-live="polite"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=0.3.0"></script>
+<script src="/static/app.js?v=0.4.2"></script>
 </body>
 </html>
