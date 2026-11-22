@@ -3,101 +3,136 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vicerrectorado UAGRM · Mapa</title>
+<title>¿Dónde queda? · Vicerrectorado UAGRM</title>
+<meta name="description" content="Mapa de las oficinas del Vicerrectorado de la UAGRM: dónde quedan, qué trámites atienden y cómo llegar.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="/static/styles.css?v=0.2.4">
+<link rel="stylesheet" href="/static/styles.css?v=0.3.0">
 </head>
 <body>
 <header>
-  <div class="titulo">
-    <h1>Oficinas Administrativas del Vicerrectorado (1)</h1>
-    <p>UAGRM · Ciudad Universitaria · SIG INF442-SA · Grupo 16</p>
+  <div class="marca">
+    <h1>¿Dónde queda?</h1>
+    <p>Oficinas del Vicerrectorado · UAGRM</p>
   </div>
   <form id="buscar" role="search">
-    <input id="texto" type="search" placeholder="¿Qué buscas? (ej. título, kardex, becas, PSA)" aria-label="Buscar oficina o trámite">
-    <button>Buscar</button>
+    <input id="texto" type="search" autocomplete="off" placeholder="Busca una oficina o trámite: título, kardex, becas…" aria-label="Buscar oficina o trámite">
+    <button aria-label="Buscar">Buscar</button>
   </form>
 </header>
+
 <main>
-  <aside id="panel">
+  <aside id="panel" aria-label="Panel de información">
     <nav class="tabs" role="tablist">
-      <button class="tab activo" data-tab="consultar" role="tab">Consultar</button>
-      <button class="tab" data-tab="tabla" role="tab">Tabla</button>
-      <button class="tab" data-tab="editar" role="tab">Editar</button>
+      <button class="tab activo" data-tab="inicio" role="tab">Inicio</button>
+      <button class="tab" data-tab="cerca" role="tab">Cerca de mí</button>
+      <button class="tab" data-tab="datos" role="tab">Datos</button>
     </nav>
 
-    <section id="tab-consultar" class="contenido">
-      <div class="grupo">
-        <h2>Consultas espaciales</h2>
-        <button id="btn-cercana" type="button">📍 Oficina más cercana a mí</button>
-        <div class="fila"><label for="radio-m">¿Qué hay a menos de</label><input id="radio-m" type="number" value="200" min="10" step="50"><span>m?</span><button id="btn-radio" type="button">Ver</button></div>
-        <div class="fila"><label for="dist-a">Distancia entre</label><select id="dist-a"></select><select id="dist-b"></select><button id="btn-dist" type="button">Medir</button></div>
-        <p class="ayuda">Clic en un <b>edificio, cancha o jardín</b> = qué contiene. Clic en una <b>oficina</b> = su ficha y el extintor, entrada y baño más cercanos.</p>
-      </div>
-      <div class="grupo">
-        <h2>Consultas alfanuméricas</h2>
-        <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las dependencias</option></select>
-        <select id="filtro-clas" aria-label="Filtrar por clasificación"><option value="">Todas las clasificaciones</option></select>
-      </div>
+    <!-- INICIO: buscar y directorio -->
+    <section id="tab-inicio" class="contenido">
       <div id="resultado"></div>
+      <div id="portada">
+        <p class="sub">Búsquedas frecuentes</p>
+        <div class="chips">
+          <button class="chip" data-q="título">🎓 Sacar mi título</button>
+          <button class="chip" data-q="kardex">📄 Kardex / notas</button>
+          <button class="chip" data-q="PSA">📝 Admisión (PSA)</button>
+          <button class="chip" data-q="becas">🤝 Becas</button>
+          <button class="chip" data-q="posgrado">🏛️ Posgrado</button>
+          <button class="chip" data-q="vocacional">🧭 Test vocacional</button>
+        </div>
+        <p class="sub">Todas las oficinas</p>
+        <div id="directorio"></div>
+      </div>
     </section>
 
-    <section id="tab-tabla" class="contenido" hidden>
+    <!-- CERCA DE MÍ: consultas espaciales con lenguaje simple -->
+    <section id="tab-cerca" class="contenido" hidden>
+      <div class="grupo">
+        <h2>¿Cuál es la oficina más cercana?</h2>
+        <p class="ayuda">Usa el GPS de tu celular. En computadora usa el centro del mapa.</p>
+        <button id="btn-cercana" type="button" class="grande">📍 Buscar la más cercana a mí</button>
+        <details class="tec"><summary>Consulta SIG</summary>Vecino más cercano (KNN) con el operador <code>&lt;-&gt;</code> de PostGIS y distancia geodésica <code>ST_Distance</code>.</details>
+      </div>
+      <div class="grupo">
+        <h2>¿Qué hay a mi alrededor?</h2>
+        <div class="chips" id="radios">
+          <button class="chip" data-m="100">100 m</button>
+          <button class="chip" data-m="200">200 m</button>
+          <button class="chip" data-m="500">500 m</button>
+          <button class="chip" data-m="1000">1 km</button>
+        </div>
+        <details class="tec"><summary>Consulta SIG</summary>Búsqueda por radio con <code>ST_DWithin</code> sobre <code>geography</code> (metros reales).</details>
+      </div>
+      <div class="grupo">
+        <h2>¿Qué tan lejos está una oficina de otra?</h2>
+        <div class="fila"><select id="dist-a" aria-label="Desde"></select><span>→</span><select id="dist-b" aria-label="Hasta"></select></div>
+        <button id="btn-dist" type="button">Medir distancia</button>
+        <details class="tec"><summary>Consulta SIG</summary><code>ST_Distance</code> entre dos puntos y <code>ST_MakeLine</code> para dibujar el tramo.</details>
+      </div>
+      <div class="grupo">
+        <h2>Ver por área</h2>
+        <select id="filtro-dep" aria-label="Filtrar por dependencia"><option value="">Todas las áreas del Vicerrectorado</option></select>
+        <select id="filtro-clas" aria-label="Filtrar por tipo de oficina"><option value="">Todos los tipos de oficina</option></select>
+        <details class="tec"><summary>Consulta SIG</summary>Consulta alfanumérica sobre el árbol de dependencias y la clasificación de ambientes.</details>
+      </div>
+      <p class="ayuda">Consejo: haz clic en un <b>edificio, cancha o jardín</b> del mapa para ver qué hay dentro y cuánto mide.</p>
+    </section>
+
+    <!-- DATOS: tabla de infraestructura, descargas, plano -->
+    <section id="tab-datos" class="contenido" hidden>
       <h2>Tabla de infraestructura</h2>
       <div id="resumen"></div>
       <h3>Oficinas del Vicerrectorado (1)</h3>
       <div id="tabla-oficinas" class="tabla-scroll"></div>
-      <h3>Descargas</h3>
-      <p class="descargas">CSV:
-        <a href="/api/infraestructura.csv?tabla=oficinas">oficinas</a> ·
-        <a href="/api/infraestructura.csv?tabla=edificios">edificios</a> ·
-        <a href="/api/infraestructura.csv?tabla=zonas">zonas</a> ·
-        <a href="/api/infraestructura.csv?tabla=vias">vías</a> ·
-        <a href="/api/infraestructura.csv?tabla=puntos">puntos</a><br>
-        GeoJSON (WGS 84):
-        <a href="/api/export/oficinas.geojson" download>oficinas</a> ·
-        <a href="/api/export/edificios.geojson" download>edificios</a> ·
-        <a href="/api/export/zonas.geojson" download>zonas</a> ·
-        <a href="/api/export/vias.geojson" download>vías</a> ·
-        <a href="/api/export/puntos.geojson" download>puntos</a><br>
-        Shapefile para ArcMap (WGS 84):
-        <a href="/api/export/oficinas.zip">oficinas</a> ·
-        <a href="/api/export/edificios.zip">edificios</a> ·
-        <a href="/api/export/zonas.zip">zonas</a> ·
-        <a href="/api/export/vias.zip">vías</a> ·
-        <a href="/api/export/puntos.zip">puntos</a></p>
-      <button id="btn-imprimir" type="button">🖨 Imprimir plano digital (PDF)</button>
+      <h3>Descargar los datos</h3>
+      <table class="descargas">
+        <tr><th>Capa</th><th>Excel (CSV)</th><th>GeoJSON</th><th>ArcMap (SHP)</th></tr>
+        <tr><td>Oficinas</td><td><a href="/api/infraestructura.csv?tabla=oficinas">CSV</a></td><td><a href="/api/export/oficinas.geojson" download>GeoJSON</a></td><td><a href="/api/export/oficinas.zip">SHP</a></td></tr>
+        <tr><td>Edificios</td><td><a href="/api/infraestructura.csv?tabla=edificios">CSV</a></td><td><a href="/api/export/edificios.geojson" download>GeoJSON</a></td><td><a href="/api/export/edificios.zip">SHP</a></td></tr>
+        <tr><td>Campus, canchas, jardines</td><td><a href="/api/infraestructura.csv?tabla=zonas">CSV</a></td><td><a href="/api/export/zonas.geojson" download>GeoJSON</a></td><td><a href="/api/export/zonas.zip">SHP</a></td></tr>
+        <tr><td>Senderos y vías</td><td><a href="/api/infraestructura.csv?tabla=vias">CSV</a></td><td><a href="/api/export/vias.geojson" download>GeoJSON</a></td><td><a href="/api/export/vias.zip">SHP</a></td></tr>
+        <tr><td>Entradas, extintores, servicios</td><td><a href="/api/infraestructura.csv?tabla=puntos">CSV</a></td><td><a href="/api/export/puntos.geojson" download>GeoJSON</a></td><td><a href="/api/export/puntos.zip">SHP</a></td></tr>
+      </table>
+      <p class="ayuda">Todo en WGS 84 (EPSG:4326). Datos base © OpenStreetMap contributors.</p>
+      <button id="btn-imprimir" type="button" class="grande">🖨 Imprimir plano digital (PDF)</button>
+      <p class="ayuda"><a href="/docs" target="_blank" rel="noopener">Documentación de la API</a></p>
     </section>
 
-    <section id="tab-editar" class="contenido" hidden>
-      <h2>Digitalización y edición de atributos</h2>
+    <!-- EQUIPO: digitalización y edición (oculto al público) -->
+    <section id="tab-equipo" class="contenido" hidden>
+      <h2>Acceso del equipo</h2>
       <div id="login">
         <label for="token">Token de edición</label>
         <div class="fila"><input id="token" type="password" autocomplete="off"><button id="btn-login" type="button">Entrar</button></div>
-        <p class="ayuda">Solo para el equipo. El token está en el archivo <code>.env</code> del proyecto.</p>
+        <p class="ayuda">Solo para el Grupo 16. El token está en el archivo <code>.env</code> del proyecto.</p>
       </div>
       <div id="editor" hidden>
-        <h3>Digitalizar un punto</h3>
+        <h3>Digitalizar un punto nuevo</h3>
         <div class="fila">
           <select id="dig-tipo">
             <option value="oficina">Oficina del Vicerrectorado</option>
             <option value="extintor">Extintor</option>
             <option value="entrada">Entrada</option>
-            <option value="servicio">Servicio</option>
+            <option value="servicio">Servicio (baño, comida…)</option>
           </select>
-          <button id="btn-digitalizar" type="button">✚ Clic en el mapa</button>
+          <button id="btn-digitalizar" type="button">✚ Marcar en el mapa</button>
         </div>
         <div id="dig-form"></div>
-        <h3>Editar atributos</h3>
+        <h3>Editar una oficina</h3>
         <p class="ayuda">Haz clic en una oficina del mapa para editar su ficha.</p>
         <form id="edit-form" hidden></form>
+        <button id="btn-salir" type="button" class="secundario">Salir del modo equipo</button>
       </div>
     </section>
+
+    <footer class="pie">
+      SIG INF442-SA · Grupo 16 · <a href="#" id="link-equipo">Acceso del equipo</a>
+    </footer>
   </aside>
-  <div id="mapa" aria-label="Mapa"></div>
+  <div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
 </main>
 
-<!-- Plano para imprimir -->
 <div id="plano-print" aria-hidden="true">
   <div class="cajetin">
     <b>PLANO DIGITAL · OFICINAS ADMINISTRATIVAS DEL VICERRECTORADO (1)</b><br>
@@ -108,6 +143,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="/static/app.js?v=0.2.4"></script>
+<script src="/static/app.js?v=0.3.0"></script>
 </body>
 </html>

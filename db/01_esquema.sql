@@ -1,6 +1,7 @@
 -- Esquema de la capa "Oficinas Administrativas del Vicerrectorado (1)" — Grupo 16 · SIG INF442-SA
 -- Sistema de referencia: WGS 84 (EPSG:4326). Áreas y longitudes en metros vía geography.
 CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS unaccent;  -- búsquedas sin importar tildes
 
 -- Clasificación de ambientes (dominio controlado)
 CREATE TABLE clasificacion (

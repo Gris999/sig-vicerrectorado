@@ -84,14 +84,19 @@ MK = "ST_SetSRID(ST_MakePoint(%s,%s),4326)"
 def oficinas(texto: str | None = None, dependencia: int | None = None, clasificacion: str | None = None):
     where, p = [], []
     if texto:
-        where.append("(o.nombre ILIKE %s OR o.sigla ILIKE %s OR o.tramites ILIKE %s OR o.funcion ILIKE %s "
-                     "OR o.responsable ILIKE %s OR d.nombre ILIKE %s OR d.responsable ILIKE %s)")
-        p += [f"%{texto}%"] * 7
+        cols = ["o.nombre", "o.sigla", "o.tramites", "o.funcion", "o.responsable", "d.nombre", "d.responsable", "d.sigla"]
+        where.append("(" + " OR ".join(f"unaccent(coalesce({c},'')) ILIKE unaccent(%s)" for c in cols) + ")")
+        p += [f"%{texto.strip()}%"] * len(cols)
     if dependencia:
         where.append("(d.id=%s OR d.padre_id=%s)"); p += [dependencia, dependencia]
     if clasificacion:
         where.append("o.clasificacion=%s"); p.append(clasificacion)
-    return fc(q(f"SELECT {OF_COLS} {OF_FROM} {'WHERE ' + ' AND '.join(where) if where else ''} ORDER BY o.codigo", p))
+    orden, po = "o.codigo", []
+    if texto:  # relevancia: primero coincide el nombre/sigla, luego los trámites, luego el resto
+        orden = ("(unaccent(o.nombre) ILIKE unaccent(%s) OR unaccent(coalesce(o.sigla,'')) ILIKE unaccent(%s)) DESC, "
+                 "unaccent(coalesce(o.tramites,'')) ILIKE unaccent(%s) DESC, o.codigo")
+        po = [f"%{texto.strip()}%"] * 3
+    return fc(q(f"SELECT {OF_COLS} {OF_FROM} {'WHERE ' + ' AND '.join(where) if where else ''} ORDER BY {orden}", p + po))
 
 
 @app.get("/api/oficinas/{oid}", tags=["Oficinas"], summary="Ficha completa de una oficina")
