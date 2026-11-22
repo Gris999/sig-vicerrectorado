@@ -447,6 +447,80 @@ table.descargas a{background:var(--guinda-50);color:var(--guinda-700)}table.desc
 .titulo-app .sobre{font-size:11px}
 .logo-print{display:none}
 
+/* ============================================================
+   v0.9 · GLASSMORFISMO + MOVIMIENTO
+   Paneles de vidrio esmerilado sobre el mapa (estilo dashboards GIS),
+   líneas con brillo y microanimaciones rápidas y sutiles (ease-out, 150–250 ms).
+   El vidrio va en un ::before para no romper los elementos fijos internos.
+   ============================================================ */
+:root{
+  --vidrio:rgba(255,255,255,.72); --vidrio-fuerte:rgba(255,255,255,.86); --vidrio-borde:rgba(255,255,255,.55);
+  --vidrio-blur:saturate(170%) blur(18px);
+  --guinda-vidrio:rgba(150,0,24,.86);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{--vidrio:rgba(22,29,40,.72);--vidrio-fuerte:rgba(22,29,40,.86);--vidrio-borde:rgba(255,255,255,.10);--guinda-vidrio:rgba(110,0,20,.82)}
+}
+
+/* panel principal de vidrio */
+.hoja{background:transparent;isolation:isolate;border:1px solid var(--vidrio-borde);
+  box-shadow:0 24px 48px -12px rgba(16,24,40,.28),inset 0 1px 0 rgba(255,255,255,.6)}
+.hoja::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--vidrio);
+  -webkit-backdrop-filter:var(--vidrio-blur);backdrop-filter:var(--vidrio-blur)}
+.cabecera{background:linear-gradient(160deg,var(--guinda-vidrio),rgba(103,0,0,.9))}
+.segmentos{background:var(--vidrio-fuerte);-webkit-backdrop-filter:var(--vidrio-blur);backdrop-filter:var(--vidrio-blur)}
+.pie{background:transparent;border-top-color:rgba(0,0,0,.06)}
+
+/* tarjetas interiores semitransparentes */
+.lista,.acceso,.bloque,.cerca li,.kpi,.tarjeta-accion{background:var(--vidrio-fuerte)!important;border-color:rgba(0,0,0,.06)}
+.tarjeta{background:transparent}
+.tarjeta:hover{background:rgba(150,0,24,.06)}
+.respuesta{background:rgba(0,51,141,.07)}
+.bienvenida{box-shadow:0 14px 30px -12px rgba(14,31,61,.6),inset 0 1px 0 rgba(255,255,255,.12)}
+
+/* controles del mapa de vidrio */
+.leaflet-bar,.leaflet-control-layers,.norte,.btn-ubic,.leyenda{background:var(--vidrio)!important;
+  -webkit-backdrop-filter:var(--vidrio-blur);backdrop-filter:var(--vidrio-blur);border:1px solid var(--vidrio-borde)!important}
+.leaflet-bar a{background:transparent!important}
+.leaflet-bar a:hover{background:rgba(255,255,255,.5)!important}
+.leaflet-tooltip.lbl{background:var(--vidrio-fuerte);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.sugerencias{background:var(--vidrio-fuerte);-webkit-backdrop-filter:var(--vidrio-blur);backdrop-filter:var(--vidrio-blur);border-color:var(--vidrio-borde)}
+#toast{background:rgba(14,31,61,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+
+/* líneas con brillo (relación oficina ↔ servicios, distancia, rutas) */
+.brillo{filter:drop-shadow(0 0 3px rgba(150,0,24,.9)) drop-shadow(0 0 8px rgba(150,0,24,.45))}
+.halo{animation:halo 1.8s var(--ease) infinite}
+@keyframes halo{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
+.halo{transform-origin:center;transform-box:fill-box}
+
+/* microanimaciones */
+.contenido>*,#resultado>*{animation:entrar .24s var(--ease) both}
+#resultado>*:nth-child(2){animation-delay:.03s}#resultado>*:nth-child(3){animation-delay:.06s}#resultado>*:nth-child(4){animation-delay:.09s}
+@keyframes entrar{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pin-of{animation:caer .35s var(--ease) both}
+@keyframes caer{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.acceso,.accion,.primario,.secundario,.tarjeta,.tab,.leaflet-bar a,.btn-ubic{transition:transform .12s var(--ease),background .15s,border-color .15s,box-shadow .15s}
+.acceso:active,.accion:active,.primario:active,.secundario:active,.tarjeta:active,.btn-ubic:active{transform:scale(.97)}
+.acceso:hover{transform:translateY(-2px)}
+
+/* celular: búsqueda flotante también de vidrio */
+@media (max-width:640px){
+  .segmentos{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .hoja{border-top:3px solid var(--guinda-700)}
+  .cabecera{background:none}
+  .buscador input{background:var(--vidrio-fuerte);-webkit-backdrop-filter:var(--vidrio-blur);backdrop-filter:var(--vidrio-blur);border:1px solid var(--vidrio-borde)}
+}
+@media (prefers-color-scheme:dark){
+  .accion:not(.principal),.secundario,.respuesta b,a{color:#9cc0ff}
+  .accion[aria-disabled=true]{color:var(--tenue)}
+  .leaflet-bar a:hover{background:rgba(255,255,255,.08)!important}
+  .hoja{box-shadow:0 24px 48px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root{--vidrio:rgba(255,255,255,.96);--vidrio-fuerte:#fff}
+}
+
 /* ---------- impresión del plano ---------- */
 #plano-print{display:none}
 @media print{

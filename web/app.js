@@ -230,9 +230,10 @@ async function verOficina(id) {
   };
   history.replaceState(null, '', `?oficina=${id}`);
   resaltado.clearLayers();
+  if (!SIN_MOV) L.circleMarker(ll(f), { radius: 26, color: '#960018', weight: 2, fillColor: '#960018', fillOpacity: .18, className: 'halo', interactive: false }).addTo(resaltado);
   centrar(ll(f));
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
-    L.polyline([ll(f), ll(x)], { color: '#960018', weight: 2, opacity: .7, dashArray: '4 5' }).addTo(resaltado));
+    L.polyline([ll(f), ll(x)], { color: '#960018', weight: 2.5, opacity: .85, dashArray: '2 6', lineCap: 'round', className: 'brillo' }).addTo(resaltado));
 }
 
 function listaOficinas(feats, titulo, extra = '') {
@@ -302,7 +303,7 @@ $('btn-dist').onclick = async () => {
   const r = await api(`/api/distancia?a=${a}&b=${b}`);
   mostrar(`<div class="respuesta">De <b>${esc(r.desde)}</b> a <b>${esc(r.hasta)}</b> hay <b>${mts(r.metros)}</b> en línea recta${aPie(r.metros)}.</div>`);
   resaltado.clearLayers();
-  const linea = L.geoJSON(r.linea, { style: { color: '#e74c3c', weight: 3, dashArray: '6 4' } }).addTo(resaltado);
+  const linea = L.geoJSON(r.linea, { style: { color: '#960018', weight: 3.5, dashArray: '2 7', lineCap: 'round', className: 'brillo' } }).addTo(resaltado);
   mapa.fitBounds(linea.getBounds().pad(.4));
 };
 async function filtrar() {
