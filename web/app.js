@@ -3,11 +3,11 @@
 
 // ---------------------------------------------------------------- simbología (una sola fuente para mapa y leyenda)
 const SIM = {
-  oficina:  { DESPACHO: ['#e0455c', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#3b82f6', 'Dirección / departamento'], ATENCION: ['#14b8d4', 'Atención al público (trámites)'] },
-  punto:    { entrada: ['#94a3b8', 'Entrada / portón'], extintor: ['#f97316', 'Extintor'], servicio: ['#2dd4bf', 'Servicio: baño, comida, salud…'] },
-  via:      { via_interna: ['#38bdf8', 'Vía interna', 2.4], sendero: ['#2dd4bf', 'Sendero peatonal', 1.2], escalera: ['#a78bfa', 'Escalera', 2] },
-  edificio: { ADMINISTRATIVO: ['#9f1239', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#155e75', 'Edificio de servicios'], ACADEMICO: ['#1e293b', 'Otros edificios / módulos'] },
-  zona:     { campus: ['#fb7185', 'Límite de la Ciudad Universitaria'], cancha: ['#166534', 'Cancha'], jardin: ['#14532d', 'Jardín / área verde'], parqueo: ['#1f2937', 'Parqueo'] },
+  oficina:  { DESPACHO: ['#f2b84b', 'Autoridad (Vicerrectorado)'], DIRECCION: ['#ff5c7c', 'Dirección / departamento'], ATENCION: ['#e9edf7', 'Atención al público (trámites)'] },
+  punto:    { entrada: ['#8a9bc4', 'Entrada / portón'], extintor: ['#ff5c7c', 'Extintor'], servicio: ['#c9d3ea', 'Servicio: baño, comida, salud…'] },
+  via:      { via_interna: ['#6f86c0', 'Vía interna', 2.2], sendero: ['#4b5d8a', 'Sendero peatonal', 1.1], escalera: ['#8a9bc4', 'Escalera', 2] },
+  edificio: { ADMINISTRATIVO: ['#5c1428', 'Edificio con oficinas del Vicerrectorado'], SERVICIO: ['#1f2a48', 'Edificio de servicios'], ACADEMICO: ['#151d33', 'Otros edificios / módulos'] },
+  zona:     { campus: ['#ff5c7c', 'Límite de la Ciudad Universitaria'], cancha: ['#1c3a33', 'Cancha'], jardin: ['#16302b', 'Jardín / área verde'], parqueo: ['#141b2e', 'Parqueo'] },
 };
 const etiqueta = p => p.sigla || p.nombre.replace(/^(Departamento|Dirección|Oficina)( General)? de /, '').replace(/ \(.*\)$/, '').split(',')[0].slice(0, 24);
 const color = (grupo, k) => (SIM[grupo][k] || ['#888'])[0];
@@ -40,7 +40,7 @@ function iconoPunto(p, dest = false) {
 function iconoPin(p, sel = false) {
   const c = color('oficina', p.clasificacion);
   return L.divIcon({ className: '', iconSize: [34, 42], iconAnchor: [17, 41], tooltipAnchor: [14, -26],
-    html: `<div class="pin-of${sel ? ' sel' : ''}" style="--c:${c}"><i class="haz"></i><i class="base"></i><svg viewBox="0 0 34 42"><path d="M17 1.5C8.4 1.5 1.5 8.3 1.5 16.7 1.5 28 17 40.5 17 40.5s15.5-12.5 15.5-23.8C32.5 8.3 25.6 1.5 17 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/></svg><span${corto(p).length > 4 ? ' class="xs"' : ''}>${esc(corto(p))}</span></div>` });
+    html: `<div class="pin-of${sel ? ' sel' : ''}" style="--c:${c}"><i class="haz"></i><i class="base"></i><svg viewBox="0 0 34 42"><path d="M17 1.5C8.4 1.5 1.5 8.3 1.5 16.7 1.5 28 17 40.5 17 40.5s15.5-12.5 15.5-23.8C32.5 8.3 25.6 1.5 17 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/></svg><span class="${corto(p).length > 4 ? 'xs ' : ''}${p.clasificacion === 'DIRECCION' ? '' : 'osc'}">${esc(corto(p))}</span></div>` });
 }
 let SELECCION = null;
 function seleccionar(id) {
@@ -93,7 +93,7 @@ const capas = {
   }),
   edificios: L.geoJSON(null, {
     pane: 'edificios',
-    style: f => ({ color: f.properties.uso === 'ADMINISTRATIVO' ? '#fb7185' : '#38bdf8', weight: .8, opacity: f.properties.uso === 'ACADEMICO' ? .35 : .9, fillColor: color('edificio', f.properties.uso), fillOpacity: .7, className: f.properties.uso === 'ADMINISTRATIVO' ? 'brillo-edif' : '' }),
+    style: f => ({ color: f.properties.uso === 'ADMINISTRATIVO' ? '#ff5c7c' : '#7e96c8', weight: .8, opacity: f.properties.uso === 'ACADEMICO' ? .35 : .9, fillColor: color('edificio', f.properties.uso), fillOpacity: .7, className: f.properties.uso === 'ADMINISTRATIVO' ? 'brillo-edif' : '' }),
     onEachFeature: (f, l) => { l.bindTooltip(f.properties.nombre); l.on('click', () => verContenido('edificio', f)); },
   }),
   vias: L.geoJSON(null, {
@@ -175,7 +175,7 @@ const ll = f => [f.geometry.coordinates[1], f.geometry.coordinates[0]];
 function tarjeta(p) {
   const sub = p.tramites ? p.tramites.split(';')[0] : (p.funcion || '');
   return `<button class="tarjeta" type="button" data-oficina="${p.id}">
-    <span class="pin" style="background:${color('oficina', p.clasificacion)}">${esc(corto(p))}</span>
+    <span class="pin" style="background:${color('oficina', p.clasificacion)};color:${p.clasificacion === 'DIRECCION' ? '#fff' : '#0a1022'}">${esc(corto(p))}</span>
     <span class="txt"><b>${esc(p.nombre)}</b><small>${esc(sub)}</small></span>
     ${p.distancia_m != null ? `<span class="dist">${mts(p.distancia_m)}</span>` : svg('chev', 'chev')}</button>`;
 }
@@ -231,10 +231,10 @@ async function verOficina(id) {
   };
   history.replaceState(null, '', `?oficina=${id}`);
   resaltado.clearLayers();
-  if (!SIN_MOV) L.circleMarker(ll(f), { radius: 26, color: '#fbbf24', weight: 2, fillColor: '#fbbf24', fillOpacity: .15, className: 'halo', interactive: false }).addTo(resaltado);
+  if (!SIN_MOV) L.circleMarker(ll(f), { radius: 26, color: '#f2b84b', weight: 2, fillColor: '#f2b84b', fillOpacity: .15, className: 'halo', interactive: false }).addTo(resaltado);
   centrar(ll(f));
   ['extintor', 'entrada', 'Baños'].map(primero).filter(Boolean).forEach(x =>
-    L.polyline([ll(f), ll(x)], { color: '#fbbf24', weight: 2.5, opacity: .9, dashArray: '2 6', lineCap: 'round', className: 'brillo' }).addTo(resaltado));
+    L.polyline([ll(f), ll(x)], { color: '#f2b84b', weight: 2.5, opacity: .9, dashArray: '2 6', lineCap: 'round', className: 'brillo' }).addTo(resaltado));
 }
 
 function listaOficinas(feats, titulo, extra = '') {

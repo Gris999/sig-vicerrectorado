@@ -78,7 +78,7 @@ function sugerir() {
     ul.innerHTML = SUG.length ? SUG.map((s, i) => {
       const p = s.f.properties;
       return s.t === 'o'
-        ? `<li role="option" id="sug-${i}" data-i="${i}"><span class="s-ic" style="background:${color('oficina', p.clasificacion)}">${esc(corto(p))}</span>
+        ? `<li role="option" id="sug-${i}" data-i="${i}"><span class="s-ic" style="background:${color('oficina', p.clasificacion)};color:${p.clasificacion === 'DIRECCION' ? '#fff' : '#0a1022'}">${esc(corto(p))}</span>
            <span class="s-t"><b>${resaltar(p.nombre, q)}</b><small>${esc(p.tramites?.split(';')[0] || p.dependencia)}</small></span></li>`
         : `<li role="option" id="sug-${i}" data-i="${i}"><span class="s-ic" style="background:var(--fondo);font-size:15px">${emojiPunto(p)}</span>
            <span class="s-t"><b>${resaltar(p.nombre || p.subtipo, q)}</b><small>Lugar del campus</small></span></li>`;
