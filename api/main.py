@@ -65,7 +65,7 @@ def csv_resp(rows, nombre):
                              headers={"Content-Disposition": f"attachment; filename={nombre}.csv"})
 
 
-OF_COLS = """o.id, o.codigo, o.nombre, o.sigla, o.clasificacion, c.nombre AS clasificacion_nombre, o.funcion, o.tramites,
+OF_COLS = """o.id, o.codigo, o.nombre, o.nombre_alterno, o.sigla, o.clasificacion, c.nombre AS clasificacion_nombre, o.funcion, o.tramites,
   o.piso, coalesce(o.responsable, CASE WHEN d.nivel=0 THEN d.responsable END) AS responsable,
   coalesce(o.cargo_responsable, CASE WHEN d.nivel=0 THEN d.cargo END) AS cargo_responsable,
   o.horario, o.telefono, o.email, o.web, o.foto, o.precision_m::float, o.metodo_captura, o.fecha_captura::text, o.verificado,
@@ -84,7 +84,7 @@ MK = "ST_SetSRID(ST_MakePoint(%s,%s),4326)"
 def oficinas(texto: str | None = None, dependencia: int | None = None, clasificacion: str | None = None):
     where, p = [], []
     if texto:
-        cols = ["o.nombre", "o.sigla", "o.tramites", "o.funcion", "o.responsable", "d.nombre", "d.responsable", "d.sigla"]
+        cols = ["o.nombre", "o.nombre_alterno", "o.sigla", "o.tramites", "o.funcion", "o.responsable", "d.nombre", "d.responsable", "d.sigla"]
         where.append("(" + " OR ".join(f"unaccent(coalesce({c},'')) ILIKE unaccent(%s)" for c in cols) + ")")
         p += [f"%{texto.strip()}%"] * len(cols)
     if dependencia:
@@ -270,7 +270,7 @@ class NuevaOficina(BaseModel):
     metodo_captura: str = "Digitalización"
 
 
-EDITABLES = {"nombre", "sigla", "clasificacion", "funcion", "tramites", "piso", "responsable", "cargo_responsable",
+EDITABLES = {"nombre", "nombre_alterno", "sigla", "clasificacion", "funcion", "tramites", "piso", "responsable", "cargo_responsable",
              "horario", "telefono", "email", "web", "foto", "precision_m", "verificado", "dependencia_id"}
 
 

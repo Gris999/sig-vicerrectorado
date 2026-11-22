@@ -845,3 +845,4 @@ input,textarea{caret-color:var(--rosa)}
 /* accesos: un solo color de realce en vez de un arcoíris */
 .acceso .ic{--c:var(--oro)!important}
 .acceso:hover .ic{--c:var(--rosa)!important}
+.ficha .alias{margin:-8px 0 12px;font-size:12px;color:var(--tenue);font-style:italic}

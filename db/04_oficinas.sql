@@ -84,3 +84,12 @@ UPDATE oficina SET horario='Lunes a viernes, 8:30 a 15:30 (continuo)', piso='Aul
 -- Registro y Trámites figura en Google Maps junto con Títulos en el mismo departamento (~30 m del punto OSM).
 UPDATE oficina SET nombre='Registro y Trámites (Departamento de Trámite, Registro y Títulos)' WHERE codigo='VR1-009';
 UPDATE edificio SET uso='ADMINISTRATIVO' WHERE id IN (SELECT edificio_id FROM oficina WHERE edificio_id IS NOT NULL) AND uso<>'SERVICIO';
+
+-- Nombres oficiales según el árbol de uagrm.edu.bo; el nombre de Google Maps queda como alterno
+UPDATE oficina SET nombre_alterno='Departamento de Escalafón Docente', nombre='Escalafón Docente' WHERE codigo='VR1-007';
+UPDATE oficina SET nombre_alterno='Departamento de Evaluación y Acreditación', nombre='Evaluación y Acreditación' WHERE codigo='VR1-008';
+UPDATE oficina SET nombre_alterno='Dpto. Admisiones y Registros (OpenStreetMap)', nombre='Registro y Trámites' WHERE codigo='VR1-009';
+UPDATE oficina SET nombre_alterno='Departamento de Trámite, Registro y Títulos', nombre='Títulos' WHERE codigo='VR1-010';
+UPDATE oficina SET nombre_alterno='Dirección de Investigación Científica e Innovación Tecnológica (DICiT)', nombre='Dirección de Investigación, Ciencia, Innovación y Tecnología' WHERE codigo='VR1-011';
+UPDATE oficina SET nombre_alterno='Departamento de Orientación Vocacional', nombre='Orientación Vocacional' WHERE codigo='VR1-012';
+UPDATE oficina SET nombre_alterno='Oficina de Certificaciones (página de la DGP)', nombre='Dirección General de Posgrado · Certificaciones' WHERE codigo='VR1-013';

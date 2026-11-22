@@ -59,7 +59,8 @@ CREATE TABLE via (                           -- senderos y vías internas
 CREATE TABLE oficina (
   id                SERIAL PRIMARY KEY,
   codigo            TEXT UNIQUE NOT NULL,     -- 'VR1-001'
-  nombre            TEXT NOT NULL,
+  nombre            TEXT NOT NULL,             -- nombre oficial (uagrm.edu.bo)
+  nombre_alterno    TEXT,                      -- cómo figura en Google Maps u otras fuentes
   sigla             TEXT,
   clasificacion     TEXT NOT NULL REFERENCES clasificacion(codigo),
   funcion           TEXT,
