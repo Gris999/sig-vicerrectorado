@@ -28,6 +28,14 @@ landing.querySelectorAll('[data-entrar]').forEach(b => b.onclick = () => entrarA
 $('ir-portada').onclick = volverAPortada;
 
 // Indicadores reales desde la base de datos (portada y tablero)
+document.addEventListener('datos-listos', () => {
+  // Enlace directo al mapa (?mapa): encuadrar el campus una vez que todo está pintado
+  if (saltarPortada && !new URLSearchParams(location.search).has('oficina')) setTimeout(() => {
+    mapa.invalidateSize();
+    const campus = capas.zonas.getLayers().filter(l => l.feature.properties.tipo === 'campus');
+    if (campus.length) { const m = margenes(); mapa.fitBounds(L.featureGroup(campus).getBounds(), { paddingTopLeft: m.tl, paddingBottomRight: m.br }); }
+  }, 150);
+});
 document.addEventListener('datos-listos', async e => {
   const inf = await api('/api/infraestructura');
   const tot = k => inf.resumen.filter(r => r.capa === k).reduce((a, r) => a + (r.total || 0), 0);

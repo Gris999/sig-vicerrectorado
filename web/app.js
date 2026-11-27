@@ -226,7 +226,7 @@ async function verOficina(id) {
   mostrar(ficha(f.properties, `<div class="seccion-f"><h3>Lo más cercano a esta oficina</h3><ul class="cerca">${items}</ul></div>`));
   seleccionar(id);
   $('btn-compartir').onclick = async () => {
-    const url = `${location.origin}/?oficina=${id}`;
+    const url = `${location.origin}${location.pathname}?oficina=${id}`;
     if (navigator.share) { try { await navigator.share({ title: f.properties.nombre, url }); return; } catch (_) {} }
     try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); } catch (_) { prompt('Copia este enlace:', url); }
   };
