@@ -1,0 +1,75 @@
+﻿codigo,nombre,clasificacion,area_m2,oficinas,fuente
+M-112,Módulo 112,Edificio académico,555.87,0,OSM way 310183816
+M-113,Módulo 113,Edificio académico,617.57,0,OSM way 310183810
+M-114,Módulo 114,Edificio académico,465.34,0,OSM way 310183805
+M-115,Módulo 115,Edificio académico,546.45,0,OSM way 310183802
+M-116,Módulo 116,Edificio académico,552.08,0,OSM way 310183815
+M-117,Módulo 117,Edificio académico,628.96,0,OSM way 310183825
+M-122,Módulo 122,Edificio académico,385.97,0,OSM way 310183817
+M-123,Módulo 123,Edificio académico,384.27,0,OSM way 310183803
+M-124,Módulo 124,Edificio académico,357.92,0,OSM way 310183814
+M-125,Módulo 125,Edificio académico,330.09,0,OSM way 310183829
+M-126,Módulo 126,Edificio administrativo,546.83,1,OSM way 310183808
+M-127,Módulo 127,Edificio académico,665.55,0,OSM way 310183830
+M-128,Módulo 128,Edificio académico,423.70,0,OSM way 310183824
+M-142,Módulo 142,Edificio académico,827.91,0,OSM way 310183826
+M-143,Módulo 143,Edificio académico,501.93,0,OSM way 310183813
+M-144,Módulo 144,Edificio administrativo,455.51,1,OSM way 310183818
+M-145,Módulo 145,Edificio académico,592.36,0,OSM way 309334805
+M-146,Módulo 146,Edificio académico,673.06,0,OSM way 310183807
+M-150,Módulo 150,Edificio académico,525.35,0,OSM way 315893227
+M-151,PostGrado Humanidades - Módulo 151,Edificio académico,635.72,0,OSM way 310183811
+M-152,Módulo 152,Edificio administrativo,560.84,1,OSM way 310183809
+M-153,Laboratorios - Módulo 153,Edificio académico,535.38,0,OSM way 310183822
+M-160,Módulo 160,Edificio académico,612.18,0,OSM way 310183812
+M-165,Módulo 165,Edificio académico,670.48,0,OSM way 310183820
+M-170,Módulo 170,Edificio académico,623.64,0,OSM way 310183823
+M-175,Módulo 175,Edificio académico,1041.62,0,OSM way 315893226
+M-185,Módulo 185,Edificio académico,1470.63,0,OSM way 310141143
+M-201,Módulo 201,Edificio académico,965.05,0,OSM way 250729554
+M-202,Módulo 202,Edificio académico,911.73,0,OSM way 250729580
+M-211,Módulo 211,Edificio académico,998.25,0,OSM way 250729606
+M-212,Módulo 212,Edificio académico,1084.60,0,OSM way 250729578
+M-220,"Módulo 220, 221, 231",Edificio académico,930.58,0,OSM way 250729570
+M-222,Módulo 222,Edificio académico,924.93,0,OSM way 314359114
+M-223,Módulo 223,Edificio académico,532.13,0,OSM way 250729572
+M-224,Módulo 224,Edificio académico,1044.78,0,OSM way 250729575
+M-232,Módulo 232,Edificio académico,794.45,0,OSM way 314358537
+M-233,Módulo 233,Edificio académico,660.96,0,OSM way 250729613
+M-234,Módulo 234,Edificio académico,1469.49,0,OSM way 250729582
+M-237,Módulo 237,Edificio académico,141.06,0,OSM way 250729608
+M-241,Módulo 241,Edificio académico,706.97,0,OSM way 576077717
+M-242,Módulo 242,Edificio académico,954.94,0,OSM way 250729603
+M-243,Módulo 243,Edificio académico,992.63,0,OSM way 250729567
+M-246,Módulo 246,Edificio académico,486.84,0,OSM way 250729561
+M-246-250729600,Módulo 246,Edificio académico,323.92,0,OSM way 250729600
+M-247,Módulo 247,Edificio académico,171.47,0,OSM way 250692652
+M-248,Módulo 248,Edificio académico,811.14,0,OSM way 250692645
+M-250,Módulo 250,Edificio académico,673.51,0,OSM way 576077715
+M-251,Módulo 251,Edificio académico,1483.40,0,OSM way 576077716
+M-252,Módulo 252,Edificio académico,819.77,0,OSM way 250729605
+M-254,Módulo 254,Edificio académico,1043.54,0,OSM way 250729577
+M-255,Módulo 255,Edificio académico,673.33,0,OSM way 250729555
+M-256,Módulo 256,Edificio académico,934.09,0,OSM way 576077705
+M-257,Módulo 257,Edificio académico,592.04,0,OSM way 250729604
+M-260,Módulo 260 y 261,Edificio académico,1503.94,0,OSM way 250729571
+M-262,Módulo 262,Edificio académico,885.42,0,OSM way 576077712
+M-264,Módulo 264,Edificio académico,690.71,0,OSM way 250729558
+M-265,Módulo 265,Edificio académico,765.16,0,OSM way 250729553
+M-272,Módulo 272,Edificio académico,735.71,0,OSM way 315390633
+M-274,Módulo 274,Edificio académico,272.60,0,OSM way 250692648
+M-280,Módulo 280,Edificio académico,694.57,0,OSM way 250729552
+M-281,Módulo 281,Edificio académico,969.56,0,OSM way 315893181
+M-282,Módulo 282,Edificio académico,687.05,0,OSM way 250729559
+M-292,Módulo 292,Edificio académico,2009.81,0,OSM way 250692651
+M-293,Módulo 293,Edificio académico,663.50,0,OSM way 250729591
+OSM-250692659,Dirección Universitaria de Bienestar Social,Edificio de servicio,252.06,1,OSM way 250692659
+OSM-250729560,Módulo de Servicio #4,Edificio de servicio,1065.65,0,OSM way 250729560
+OSM-250729573,Módulo de Servicio,Edificio de servicio,538.57,0,OSM way 250729573
+OSM-250729574,Módulo de Servicio,Edificio de servicio,529.11,0,OSM way 250729574
+OSM-310140675,Dpto. Admisiones y Registros,Edificio administrativo,574.84,1,OSM way 310140675
+OSM-310183831,Derecho Biblioteca de postgrado,Edificio académico,337.55,0,OSM way 310183831
+OSM-314806596,UAGRM Admisión Estudiantil PAB/PSA,Edificio administrativo,178.86,1,OSM way 314806596
+OSM-410587898,Facultad de Humanidades Postgrado,Edificio administrativo,507.49,1,OSM way 410587898
+OSM-412452115,Postgrado Facultad Ciencias Exactas y Tecnología,Edificio académico,644.83,0,OSM way 412452115
+OSM-429795143,PostGrado Contaduría Pública,Edificio académico,402.22,0,OSM way 429795143

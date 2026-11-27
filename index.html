@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7a0014">
+<title>¿Dónde queda? · Vicerrectorado UAGRM</title>
+<meta name="description" content="Encuentra las oficinas del Vicerrectorado de la UAGRM: dónde quedan, qué trámites atienden y cómo llegar.">
+<link rel="icon" type="image/png" href="static/img/uagrm-favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="static/styles.css?v=1.3.0">
+</head>
+<body>
+<!-- ============ PORTADA ============ -->
+<section id="landing" class="landing" aria-label="Inicio">
+  <div class="l-fondo" aria-hidden="true"><span class="l-glow g1"></span><span class="l-glow g2"></span></div>
+  <header class="l-top">
+    <img src="static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" class="l-logo">
+    <button type="button" class="l-link" data-entrar>Ver el mapa <span aria-hidden="true">→</span></button>
+  </header>
+  <main class="l-hero">
+    <h1>Encuentra cualquier oficina del <em>Vicerrectorado</em> en segundos</h1>
+    <p class="l-sub">Dónde queda, qué trámites atiende, en qué horario y cómo llegar caminando desde donde estés.</p>
+    <form id="l-buscar" class="l-buscar" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+      <input id="l-texto" type="search" autocomplete="off" placeholder="¿Qué trámite necesitas? Ej.: título, kardex, becas" aria-label="Buscar trámite u oficina">
+      <button type="submit">Buscar</button>
+    </form>
+    <div class="l-chips">
+      <button data-q="título"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>Título</button><button data-q="kardex"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Kardex</button><button data-q="PSA"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Admisión PSA</button>
+      <button data-q="becas"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>Becas</button><button data-q="posgrado"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>Posgrado</button><button data-q="vocacional"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>Test vocacional</button>
+    </div>
+    <dl class="l-stats" id="l-stats">
+      <div><dt>Oficinas</dt><dd data-k="oficinas">—</dd></div>
+      <div><dt>Unidades</dt><dd data-k="unidades">—</dd></div>
+      <div><dt>Edificios</dt><dd data-k="edificios">—</dd></div>
+      <div><dt>Km de caminos</dt><dd data-k="km">—</dd></div>
+    </dl>
+  </main>
+  <ol class="l-flujo" aria-label="Cómo funciona">
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg><span><b>Busca</b> el trámite o elige un atajo</span></li>
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg><span><b>Ubica</b> la oficina y mira qué atiende</span></li>
+    <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5 5 0 0 1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5.1-.8.1L6 8.3V13h2V9.6z"/></svg><span><b>Llega</b> con la ruta a pie en tu celular</span></li>
+  </ol>
+  <footer class="l-pie">SIG INF442-SA · Grupo 16 · Datos en WGS 84 · Base © OpenStreetMap contributors</footer>
+</section>
+
+<!-- ============ PANEL DE INDICADORES (escritorio) ============ -->
+<aside id="tablero" class="tablero" aria-label="Indicadores">
+  <div class="t-card"><h3>Cobertura</h3><div class="anillo" id="t-anillo"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" class="a-fondo"/><circle cx="18" cy="18" r="15.9" class="a-valor" id="t-arco"/></svg><b id="t-cob">—</b></div><p id="t-cob-txt">unidades ubicadas</p></div>
+  <div class="t-card"><h3>Oficinas por área</h3><div id="t-barras" class="barras"></div></div>
+  <div class="t-card t-mini"><div><b id="t-km">—</b><span>km de caminos</span></div><div><b id="t-ha">—</b><span>ha de campus</span></div></div>
+</aside>
+
+<div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+<div id="mapa" role="application" aria-label="Mapa de la universidad"></div>
+
+<aside id="panel" class="hoja" aria-label="Panel de información">
+  <button class="asa" id="asa" type="button" aria-label="Expandir o contraer panel"><span></span></button>
+
+  <div class="cabecera">
+    <div class="marca">
+      <button type="button" class="ir-portada" id="ir-portada" aria-label="Volver a la portada"><img class="logo-uagrm" src="static/img/uagrm-logo.png" alt="Universidad Autónoma Gabriel René Moreno" width="707" height="88"></button>
+      <div class="titulo-app">
+        <h1>¿Dónde queda?</h1>
+        <p class="sobre">Oficinas del Vicerrectorado</p>
+      </div>
+    </div>
+    <form id="buscar" role="search" class="buscador">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+      <input id="texto" type="search" autocomplete="off" placeholder="Ej.: título, kardex, becas, Posgrado…" aria-label="Buscar oficina o trámite"
+        role="combobox" aria-expanded="false" aria-controls="sugerencias" aria-autocomplete="list">
+      <button id="limpiar" type="button" class="icono" aria-label="Limpiar búsqueda" hidden><svg viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></svg></button>
+      <ul id="sugerencias" class="sugerencias" role="listbox" aria-label="Sugerencias" hidden></ul>
+    </form>
+    <nav class="segmentos" role="tablist" aria-label="Secciones">
+      <button class="tab activo" data-tab="inicio" role="tab">Explorar</button>
+      <button class="tab" data-tab="cerca" role="tab">Cerca de mí</button>
+      <button class="tab" data-tab="datos" role="tab">Datos</button>
+    </nav>
+  </div>
+
+  <div class="cuerpo" id="cuerpo">
+    <!-- EXPLORAR -->
+    <section id="tab-inicio" class="contenido">
+      <div id="resultado"></div>
+      <div id="portada">
+        <section class="bienvenida" aria-labelledby="bv-titulo">
+          <h2 id="bv-titulo">¿A qué oficina del Vicerrectorado necesitas ir?</h2>
+          <ol class="pasos">
+            <li><span>1</span><div><b>Elige un trámite</b> abajo o escríbelo en el buscador</div></li>
+            <li><span>2</span><div><b>Toca la oficina</b> para ver horario, contacto y qué trámites atiende</div></li>
+            <li><span>3</span><div><b>Pulsa “Cómo llegar”</b> y el celular te guía a pie</div></li>
+          </ol>
+        </section>
+        <h2 class="titulo-seccion">1 · Elige qué necesitas hacer</h2>
+        <div class="accesos">
+          <button class="acceso" data-q="título"><span class="ic" style="--c:#c2410c"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></span><span>Sacar mi título</span></button>
+          <button class="acceso" data-q="kardex"><span class="ic" style="--c:#1d4ed8"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span><span>Kardex y notas</span></button>
+          <button class="acceso" data-q="PSA"><span class="ic" style="--c:#7c3aed"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></span><span>Admisión (PSA)</span></button>
+          <button class="acceso" data-q="becas"><span class="ic" style="--c:#047857"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span>Becas y salud</span></button>
+          <button class="acceso" data-q="posgrado"><span class="ic" style="--c:#0e7490"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg></span><span>Posgrado</span></button>
+          <button class="acceso" data-q="vocacional"><span class="ic" style="--c:#be185d"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg></span><span>Test vocacional</span></button>
+        </div>
+        <h2 class="titulo-seccion">O busca la oficina en la lista <span id="cuenta" class="contador"></span></h2>
+        <div id="directorio"><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div></div>
+      </div>
+    </section>
+
+    <!-- CERCA DE MÍ -->
+    <section id="tab-cerca" class="contenido" hidden>
+      <div class="tarjeta-accion">
+        <div>
+          <h3>Oficina más cercana</h3>
+          <p>Usa el GPS de tu celular (en computadora, el centro del mapa).</p>
+        </div>
+        <button id="btn-cercana" type="button" class="primario">Buscar</button>
+      </div>
+      <div class="bloque">
+        <h3>¿Qué hay a mi alrededor?</h3>
+        <div class="pastillas" id="radios">
+          <button class="pastilla" data-m="100">100 m</button>
+          <button class="pastilla" data-m="200">200 m</button>
+          <button class="pastilla" data-m="500">500 m</button>
+          <button class="pastilla" data-m="1000">1 km</button>
+        </div>
+        <details class="tec"><summary>Consulta SIG</summary>Vecino más cercano con el operador <code>&lt;-&gt;</code> y radio con <code>ST_DWithin</code> sobre <code>geography</code> (metros reales).</details>
+      </div>
+      <div class="bloque">
+        <h3>Distancia entre dos oficinas</h3>
+        <label class="campo"><span>Desde</span><select id="dist-a"></select></label>
+        <label class="campo"><span>Hasta</span><select id="dist-b"></select></label>
+        <button id="btn-dist" type="button" class="secundario ancho">Medir distancia</button>
+        <details class="tec"><summary>Consulta SIG</summary><code>ST_Distance</code> geodésica y <code>ST_MakeLine</code> para dibujar el tramo.</details>
+      </div>
+      <div class="bloque">
+        <h3>Filtrar el mapa</h3>
+        <label class="campo"><span>Área</span><select id="filtro-dep"><option value="">Todas las áreas</option></select></label>
+        <label class="campo"><span>Tipo</span><select id="filtro-clas"><option value="">Todos los tipos</option></select></label>
+        <details class="tec"><summary>Consulta SIG</summary>Consulta alfanumérica sobre el árbol de dependencias y la clasificación de ambientes.</details>
+      </div>
+      <p class="nota">Toca un edificio, cancha o jardín en el mapa para ver qué hay dentro y cuánto mide.</p>
+    </section>
+
+    <!-- DATOS -->
+    <section id="tab-datos" class="contenido" hidden>
+      <div id="kpis" class="kpis"></div>
+      <div class="bloque">
+        <h3>Tabla de infraestructura</h3>
+        <div id="resumen"></div>
+      </div>
+      <div class="bloque">
+        <h3>Oficinas del Vicerrectorado (1)</h3>
+        <div id="tabla-oficinas" class="tabla-scroll"></div>
+      </div>
+      <div class="bloque">
+        <h3>Descargar datos</h3>
+        <table class="descargas">
+          <tr><th>Capa</th><th>CSV</th><th>GeoJSON</th><th>SHP</th></tr>
+          <tr><td>Oficinas</td><td><a href="descargas/infraestructura_oficinas.csv">↓</a></td><td><a href="descargas/oficinas.geojson" download>↓</a></td><td><a href="descargas/VR1_oficinas.zip">↓</a></td></tr>
+          <tr><td>Edificios</td><td><a href="descargas/infraestructura_edificios.csv">↓</a></td><td><a href="descargas/edificios.geojson" download>↓</a></td><td><a href="descargas/VR1_edificios.zip">↓</a></td></tr>
+          <tr><td>Campus, canchas, jardines</td><td><a href="descargas/infraestructura_zonas.csv">↓</a></td><td><a href="descargas/zonas.geojson" download>↓</a></td><td><a href="descargas/VR1_zonas.zip">↓</a></td></tr>
+          <tr><td>Senderos y vías</td><td><a href="descargas/infraestructura_vias.csv">↓</a></td><td><a href="descargas/vias.geojson" download>↓</a></td><td><a href="descargas/VR1_vias.zip">↓</a></td></tr>
+          <tr><td>Entradas, extintores, servicios</td><td><a href="descargas/infraestructura_puntos.csv">↓</a></td><td><a href="descargas/puntos.geojson" download>↓</a></td><td><a href="descargas/VR1_puntos.zip">↓</a></td></tr>
+        </table>
+        <p class="nota">WGS 84 (EPSG:4326). SHP se abre en ArcMap/QGIS. Datos base © OpenStreetMap contributors.</p>
+      </div>
+      <button id="btn-imprimir" type="button" class="primario ancho">Imprimir plano digital (PDF)</button>
+      <p class="nota centro"><a href="/docs" target="_blank" rel="noopener">Documentación de la API</a></p>
+    </section>
+
+    <!-- EQUIPO -->
+    <section id="tab-equipo" class="contenido" hidden>
+      <div class="bloque">
+        <h3>Acceso del equipo</h3>
+        <div id="login">
+          <label class="campo"><span>Token de edición</span><input id="token" type="password" autocomplete="off"></label>
+          <button id="btn-login" type="button" class="primario ancho">Entrar</button>
+          <p class="nota">Solo para el Grupo 16. El token está en el archivo <code>.env</code> del proyecto.</p>
+        </div>
+        <div id="editor" hidden>
+          <label class="campo"><span>Digitalizar</span>
+            <select id="dig-tipo">
+              <option value="oficina">Oficina del Vicerrectorado</option>
+              <option value="extintor">Extintor</option>
+              <option value="entrada">Entrada</option>
+              <option value="servicio">Servicio (baño, comida…)</option>
+            </select></label>
+          <button id="btn-digitalizar" type="button" class="secundario ancho">Marcar en el mapa</button>
+          <div id="dig-form"></div>
+          <p class="nota">Para editar una oficina, tócala en el mapa.</p>
+          <form id="edit-form" hidden></form>
+          <button id="btn-salir" type="button" class="texto">Salir del modo equipo</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="pie">
+    <span>SIG INF442-SA · Grupo 16</span>
+    <a href="#" id="link-equipo">Acceso del equipo</a>
+  </footer>
+</aside>
+
+<div id="plano-print" aria-hidden="true">
+  <div class="cajetin">
+    <img src="static/img/uagrm-logo.png" alt="" class="logo-print">
+    <b>PLANO DIGITAL · OFICINAS ADMINISTRATIVAS DEL VICERRECTORADO (1)</b><br>
+    Universidad Autónoma Gabriel René Moreno · Santa Cruz de la Sierra<br>
+    Sistema de referencia: WGS 84 (EPSG:4326) · Datos base: © OpenStreetMap contributors · <span id="fecha-plano"></span><br>
+    SIG INF442-SA 2-2026 · Grupo 16: Alaca P., Corrales B., Fernandez J., Otsubo C. (líder), Quenta Y.
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="static/estatico.js"></script>
+<script src="static/app.js?v=1.3.0"></script>
+<script src="static/portada.js?v=1.3.0"></script>
+<script src="static/ui.js?v=1.3.0"></script>
+</body>
+</html>

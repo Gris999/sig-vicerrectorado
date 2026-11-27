@@ -1,0 +1,47 @@
+﻿id,tipo,subtipo,nombre,descripcion,fuente
+1,entrada,porton,Portón,,OSM node 997617363
+2,entrada,porton,Portón,,OSM node 2570825992
+3,entrada,porton,Portón,,OSM node 2570825995
+4,entrada,porton,Portón,,OSM node 2570826058
+5,entrada,porton,Portón,,OSM node 2570826063
+6,entrada,porton,Portón,,OSM node 2570826067
+7,entrada,porton,Portón,,OSM node 2571129267
+8,entrada,porton,Portón,,OSM node 2571129269
+9,entrada,porton,Portón,,OSM node 2571129279
+10,entrada,porton,Portón,,OSM node 2571129285
+11,entrada,porton,Portón,,OSM node 2571129325
+12,entrada,porton,Portón,,OSM node 2571129329
+13,entrada,porton,Portón,,OSM node 2571129333
+14,entrada,porton,Portón,,OSM node 2571129340
+15,entrada,porton,Portón,,OSM node 3155745910
+17,entrada,puerta,Entrada,,OSM node 3220197825
+18,entrada,porton,Portón,,OSM node 3882291423
+19,entrada,porton,Portón,,OSM node 3882291424
+20,entrada,porton,Portón,,OSM node 3882291426
+29,entrada,porton,Portón,,OSM node 4123941795
+30,entrada,porton,Portón,,OSM node 4123941816
+33,entrada,porton,Portón,,OSM node 4138749231
+41,entrada,porton,Portón,,OSM node 5526337162
+42,entrada,porton,Portón,,OSM node 5526337163
+43,entrada,porton,Portón,,OSM node 5526337164
+44,entrada,porton,Portón,,OSM node 5526337165
+45,entrada,porton,Portón,,OSM node 5796668028
+51,entrada,porton,Portón,,OSM node 11081404981
+52,entrada,porton,Portón,,OSM node 11218462705
+16,servicio,Consultorio médico,Análisis Clínico FCSH,,OSM node 3215072717
+22,servicio,Biblioteca,Biblioteca Tecnología,,OSM node 4062511755
+23,servicio,Estudio (Canal/radio),Canal 11,,OSM node 4062511756
+24,servicio,Patio de comidas,Comedor Universitario,,OSM node 4062511757
+25,servicio,Veterinaria,Hospital Veterinario,,OSM node 4062511766
+26,servicio,Fotocopiadora,Imprenta,,OSM node 4062511767
+27,servicio,Kiosco,Snack,,OSM node 4062511775
+28,servicio,Teatro / auditorio,Auditorio Facultad Politécnica,,OSM node 4063591221
+31,servicio,Biblioteca,Sala de Lectura,Mo-Fr 09:00-18:00,OSM node 4138749213
+32,servicio,Parqueo de motos,Parqueo de motos,,OSM node 4138749227
+34,servicio,Guardería,Guardería Universitaria Gabrielito,,OSM node 4188717389
+35,servicio,Comedor / restaurante,Cafecito,,OSM node 4289910072
+36,servicio,Biblioteca,PostGrado Derecho,,OSM node 4289910077
+40,servicio,Biblioteca,Biblioteca de Humanidades,,OSM node 5526337159
+53,servicio,Teatro / auditorio,Teatro / auditorio,,OSM way 250866247
+54,servicio,Baños,Baños Campus,,OSM way 315893209
+55,servicio,Baños,Baños,,OSM way 315975110

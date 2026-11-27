@@ -1,0 +1,14 @@
+﻿codigo,nombre,sigla,dependencia,clasificacion,edificio,piso,responsable,horario,telefono,lat,lon,precision_m,metodo_captura,verificado
+VR1-001,Vicerrectorado,VR,Vicerrectorado,Despacho de autoridad,,,MSc. Juana Borja Saavedra,,3 3365533,-17.7783048,-63.1914540,15.0,"Google Maps (Edificio Roma, C. Venezuela 40)",False
+VR1-002,Departamento de Educación a Distancia y Tecnología Educativa,DEDTE,Departamento de Educación a Distancia y Tecnología Educativa,Dirección,Módulo 144,,,,75321718,-17.7790762,-63.1906568,15.0,Google Maps,False
+VR1-003,Dirección General de Posgrado,DGP,Dirección General de Posgrado,Dirección,,5.º piso,Ph.D. Rolando López Cabezas,"Lunes a viernes, 8:30 a 15:30 (continuo)",,-17.7926830,-63.1819350,10.0,"Enlace de mapa oficial (Av. Irala N.º 565, 5.º piso)",False
+VR1-004,Dirección Universitaria de Bienestar Social,DUBS,Dirección Universitaria de Bienestar Social,Dirección,Dirección Universitaria de Bienestar Social,,,,,-17.7759694,-63.1987555,10.0,OSM,False
+VR1-005,Dirección de Calidad Académica y Acreditación,DICAA,Dirección de Calidad Académica y Acreditación,Dirección,,,,,,-17.7782242,-63.1914910,15.0,Google Maps,False
+VR1-006,Admisión Estudiantil,AE,Admisión Estudiantil,Atención al público,UAGRM Admisión Estudiantil PAB/PSA,,,,,-17.7768182,-63.1906494,10.0,OSM,False
+VR1-007,Escalafón Docente,,Escalafón Docente,Atención al público,Módulo 152,,,,3365454,-17.7777181,-63.1916317,15.0,Google Maps,False
+VR1-008,Evaluación y Acreditación,,Evaluación y Acreditación,Atención al público,,,,,,-17.7745711,-63.1925255,15.0,Google Maps (Av. 26 de Febrero),False
+VR1-009,Registro y Trámites,,Registro y Trámites,Atención al público,Dpto. Admisiones y Registros,,,,,-17.7774190,-63.1904284,10.0,OSM,False
+VR1-010,Títulos,,Títulos,Atención al público,,,,,,-17.7776560,-63.1903922,15.0,Google Maps (Campus Universitario UAGRM),False
+VR1-011,"Dirección de Investigación, Ciencia, Innovación y Tecnología",DICIT,"Dirección de Investigación, Ciencia, Innovación y Tecnología",Dirección,Facultad de Humanidades Postgrado,,,,,-17.7761731,-63.1908557,15.0,Google Maps,False
+VR1-012,Orientación Vocacional,,Orientación Vocacional,Atención al público,,2.º piso,,,68904037,-17.7777863,-63.1654578,15.0,"Google Maps + dirección oficial (Av. Santa Cruz #162, entre Santiago y Charcas, 2.º piso)",False
+VR1-013,Dirección General de Posgrado · Certificaciones,DGP,Dirección General de Posgrado,Atención al público,Módulo 126,Aula 4,,"Lunes a viernes, 8:30 a 15:30 (continuo)",,-17.7780090,-63.1910620,10.0,"Enlace de mapa oficial (Campus Universitario, Pabellón 126, Aula 4)",False

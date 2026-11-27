@@ -1,0 +1,53 @@
+﻿id,tipo,nombre,detalle,area_m2,fuente
+1,campus,Campus Universitario Universidad Autónoma Gabriel René Moreno,,119992.45,OSM way 165843591
+2,campus,Ciudadela Universitaria UAGRM,,335555.39,OSM way 326801503
+15,cancha,,soccer,7127.69,OSM way 250692718
+26,cancha,,soccer;basketball,1004.82,OSM way 250729700
+33,cancha,Cancha Municipal,soccer;basketball;volleyball,1555.41,OSM way 310141580
+34,cancha,,soccer,5944.54,OSM way 310183794
+37,cancha,,soccer,1894.13,OSM way 315893186
+46,cancha,,soccer,1324.11,OSM way 576077688
+49,cancha,,basketball,596.90,OSM way 1210825959
+50,cancha,,basketball,1176.87,OSM way 1210825968
+51,cancha,,basketball,1176.87,OSM way 1210825969
+54,cancha,,basketball,476.03,OSM way 1210826005
+3,jardin,,,18.72,OSM way 165844383
+4,jardin,,,269.71,OSM way 250692672
+5,jardin,,,79.25,OSM way 250692674
+6,jardin,,,89.54,OSM way 250692675
+7,jardin,,,361.28,OSM way 250692676
+8,jardin,,,69.10,OSM way 250692678
+9,jardin,,,69.10,OSM way 250692679
+10,jardin,,,69.10,OSM way 250692680
+11,jardin,,,180.25,OSM way 250692682
+12,jardin,,,401.97,OSM way 250692683
+13,jardin,,,292.06,OSM way 250692684
+16,jardin,,,172.25,OSM way 250729614
+17,jardin,,,240.92,OSM way 250729616
+18,jardin,,,241.30,OSM way 250729617
+19,jardin,,,53.29,OSM way 250729618
+20,jardin,,,99.86,OSM way 250729619
+21,jardin,,,128.14,OSM way 250729620
+22,jardin,,,450.29,OSM way 250729621
+36,jardin,,,32.14,OSM way 310183832
+38,jardin,,,3197.63,OSM way 315893188
+39,jardin,,,213.96,OSM way 315893208
+56,jardin,,,210.41,OSM way 1210870503
+57,jardin,,,372.10,OSM way 1210870504
+58,jardin,,,86.01,OSM way 1210870505
+14,parqueo,,,1136.84,OSM way 250692717
+23,parqueo,,,1229.92,OSM way 250729697
+24,parqueo,,,590.14,OSM way 250729698
+25,parqueo,,,821.00,OSM way 250729699
+27,parqueo,,,1016.19,OSM way 250729701
+28,parqueo,,,439.32,OSM way 250729702
+29,parqueo,,,574.78,OSM way 250729703
+30,parqueo,,,237.83,OSM way 250866267
+31,parqueo,,,1022.71,OSM way 250866268
+32,parqueo,,,878.95,OSM way 250866269
+35,parqueo,,,2280.31,OSM way 310183796
+47,parqueo,,,352.51,OSM way 576077702
+48,parqueo,,,3200.27,OSM way 576077708
+52,parqueo,,,347.95,OSM way 1210825996
+53,parqueo,,,895.32,OSM way 1210826000
+55,parqueo,,,1977.42,OSM way 1210870466
