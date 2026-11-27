@@ -3,7 +3,7 @@
 Proyecto final de **Sistemas de Información Geográfica (INF442-SA), semestre 2-2026**, UAGRM.
 Docente: Ing. Franklin Calderón.
 
-## Grupo 16 (lista oficial: docs/referencia/grupos-proyecto-sig.pdf)
+## Grupo 16
 | Integrante | Rol |
 |---|---|
 | Otsubo Alurralde Carlos Diego | Líder / Product Owner / Analista |
